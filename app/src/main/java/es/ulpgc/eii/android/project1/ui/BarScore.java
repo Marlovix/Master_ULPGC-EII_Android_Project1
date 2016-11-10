@@ -40,8 +40,16 @@ public class BarScore {
         textViewScore.setText(String.format(Locale.getDefault(), "%d", score));
     }
 
+    public String getNamePlayer(){
+        return textViewNamePlayer.getText().toString();
+    }
+
     public ProgressBar getProgressBar() {
         return progressBar;
+    }
+
+    public void setMax(int max){
+        progressBar.setMax(max);
     }
 
 }

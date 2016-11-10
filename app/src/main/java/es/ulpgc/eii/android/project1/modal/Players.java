@@ -20,28 +20,14 @@ public class Players extends ArrayList<Player> {
         playerToPlay = player;
     }
 
-    public void changePlayerToPlay() {
-        playerToPlay.setAccumulatedScore(0);
+    public void changePlayer() {
+        playerToPlay.resetAccumulatedScore();
         int numPlayer = this.indexOf(playerToPlay) + 1;
         playerToPlay = this.get(numPlayer % this.size());
     }
 
-    public Player getPlayerToPlay() {
+    public Player getPlayer() {
         return playerToPlay;
-    }
-
-    // Set the max score as maximum of progress in the ProgressBar widgets //
-    void setMaxProgress(int maxScore) {
-        for (Player player : this) {
-            player.getBarScore().getProgressBar().setMax(maxScore);
-        }
-    }
-
-    // Set to zero the progress and the text of the players //
-    void resetBarScores() {
-        for (Player player : this) {
-            player.getBarScore().setScore(0);
-        }
     }
 
 }

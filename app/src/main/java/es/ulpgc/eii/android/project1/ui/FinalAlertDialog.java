@@ -1,7 +1,7 @@
 package es.ulpgc.eii.android.project1.ui;
 
-import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.view.Gravity;
 import android.widget.TextView;
 
@@ -9,6 +9,7 @@ import es.ulpgc.eii.android.project1.R;
 import es.ulpgc.eii.android.project1.listener.ExitListener;
 import es.ulpgc.eii.android.project1.listener.PlayAgainListener;
 import es.ulpgc.eii.android.project1.modal.Game;
+import es.ulpgc.eii.android.project1.modal.Player;
 
 /**
  * Created by Marlovix
@@ -17,15 +18,20 @@ import es.ulpgc.eii.android.project1.modal.Game;
 
 public class FinalAlertDialog {
 
-    public void show(Game game) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(game.getContext());
-        builder.setTitle(game.getContext().getString(R.string.button_final));
-        builder.setMessage(String.format(game.getContext().getString(R.string.label_won),
-                game.getPlayers().getPlayerToPlay().getName()));
-        builder.setPositiveButton(game.getContext().getResources().getString(R.string.button_play_again),
-                new PlayAgainListener(game));
-        builder.setNegativeButton(game.getContext().getResources().getString(R.string.button_exit),
-                new ExitListener((Activity) game.getContext()));
+    public void show(Context context, Game game) {
+        Player winner = game.getPlayers().getPlayer();
+
+        String title = context.getString(R.string.button_final);
+        String message = String.format(context.getString(R.string.label_won), winner.getName());
+
+        String positive = context.getString(R.string.button_play_again);
+        String negative = context.getString(R.string.button_exit);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(title);
+        builder.setMessage(message);
+        builder.setPositiveButton(positive, new PlayAgainListener(game));
+        builder.setNegativeButton(negative, new ExitListener(context));
         builder.setCancelable(false);
 
         // Center the message of the Alert Dialog //

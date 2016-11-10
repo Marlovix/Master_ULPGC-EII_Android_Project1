@@ -1,12 +1,11 @@
 package es.ulpgc.eii.android.project1.ui;
 
-import android.app.Activity;
+import android.content.Context;
 import android.view.View;
 import android.widget.TextView;
 
 import es.ulpgc.eii.android.project1.R;
-import es.ulpgc.eii.android.project1.listener.StartTurnListener;
-import es.ulpgc.eii.android.project1.modal.Game;
+import es.ulpgc.eii.android.project1.modal.Player;
 
 /**
  * Created by Marlovix
@@ -17,36 +16,35 @@ import es.ulpgc.eii.android.project1.modal.Game;
 // the name of the player who is playing and the clickable text to start the turn with a color //
 public class GameState {
 
-    private Game game;
     private TextView textViewPlayerToPlay;
     private TextView textViewStartTurn;
     private TextView textViewAccumulated;
 
-    public GameState(Game game) {
-        this.game = game;
-
+    public GameState(TextView textViewAccumulated,
+                     TextView textViewPlayerToPlay, TextView textViewStartTurn) {
         // UI widgets initialization //
-        Activity auxActivity = (Activity) game.getContext();
-        textViewAccumulated = (TextView) auxActivity.findViewById(R.id.textView_accumulated_score);
-        textViewPlayerToPlay = (TextView) auxActivity.findViewById(R.id.textView_player_turn);
-        textViewStartTurn = (TextView) auxActivity.findViewById(R.id.textView_start_turn);
-
-        // Listener //
-        textViewStartTurn.setOnClickListener(
-                new StartTurnListener(game.getButtons().getButtonThrow()));
+        this.textViewAccumulated = textViewAccumulated;
+        this.textViewPlayerToPlay = textViewPlayerToPlay;
+        this.textViewStartTurn = textViewStartTurn;
     }
 
-    public void newTurn() {
-        textViewPlayerToPlay.setText(game.getPlayers().getPlayerToPlay().getName());
-        textViewStartTurn.setText(String.format(game.getContext().getString(R.string.label_start_turn),
-                game.getPlayers().getPlayerToPlay().getName()));
-        textViewStartTurn.setTextColor(game.getPlayers().getPlayerToPlay().getColor());
+    public void newTurn(Player player) {
+        Context context = textViewPlayerToPlay.getContext();
+        String newPlayer = player.getName();
+        String textNewTurn = String.format(context.getString(R.string.label_start_turn), newPlayer);
+        int colorText = player.getColor();
+        updateAccumulatedView(0);
+        textViewPlayerToPlay.setText(newPlayer);
+        textViewStartTurn.setText(textNewTurn);
+        textViewStartTurn.setTextColor(colorText);
         textViewStartTurn.setVisibility(View.VISIBLE);
     }
 
-    public TextView getTextViewAccumulated() {
-        return textViewAccumulated;
+    // The only element which needs a update is the accumulated score //
+    public void updateAccumulatedView(int accumulatedScore) {
+        Context context = textViewAccumulated.getContext();
+        String textAccumulated =
+                String.format(context.getString(R.string.label_accumulated), accumulatedScore);
+        textViewAccumulated.setText(textAccumulated);
     }
-
-
 }

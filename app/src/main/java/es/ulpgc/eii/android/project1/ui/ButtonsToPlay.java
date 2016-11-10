@@ -20,23 +20,26 @@ public class ButtonsToPlay {
     private Button buttonThrow;
     private Button buttonCollect;
 
-    public ButtonsToPlay(Game game) {
+    public ButtonsToPlay(Button buttonThrow, Button buttonCollect) {
 
-        // UI widgets initialization //
-        buttonCollect = (Button) ((Activity) game.getContext()).findViewById(R.id.button_collect);
-        buttonThrow = (Button) ((Activity) game.getContext()).findViewById(R.id.button_throw);
+        this.buttonThrow = buttonThrow;
+        this.buttonCollect = buttonCollect;
 
         // Visibility of the buttons //
         hideButtons();
-
-        // Listeners //
-        buttonThrow.setOnClickListener(new ThrowListener(game));
-        buttonCollect.setOnClickListener(new CollectListener(game));
     }
 
     public void hideButtons() {
-        buttonCollect.setVisibility(View.GONE);
-        buttonThrow.setVisibility(View.GONE);
+        buttonCollect.setVisibility(View.INVISIBLE);
+        buttonThrow.setVisibility(View.INVISIBLE);
+    }
+
+    public void showThrowButton(){
+        buttonThrow.setVisibility(View.VISIBLE);
+    }
+
+    public void showCollectButton(){
+        buttonCollect.setVisibility(View.VISIBLE);
     }
 
     Button getButtonThrow() {

@@ -11,16 +11,15 @@ import es.ulpgc.eii.android.project1.ui.BarScore;
 public class Player {
 
     private String name;
+    private int totalScore;
     private int accumulatedScore;
     private int color;
-    private BarScore barScore;
 
-    public Player(String name, int color, BarScore barScore) {
+    public Player(String name, int color) {
         this.name = name;
-        accumulatedScore = 0;
         this.color = color;
-        this.barScore = barScore;
-        this.barScore.setNameBarScore(name);
+        totalScore = 0;
+        accumulatedScore = 0;
     }
 
     public String getName() {
@@ -35,20 +34,32 @@ public class Player {
         return accumulatedScore;
     }
 
-    void setAccumulatedScore(int accumulatedScore) {
-        this.accumulatedScore = accumulatedScore;
+    public void resetAccumulatedScore() {
+        this.accumulatedScore = 0;
     }
 
     public void addAccumulatedScore(int accumulatedScore) {
         this.accumulatedScore += accumulatedScore;
     }
 
+    public int updateScore(int newScore){
+        totalScore = accumulatedScore + newScore;
+        return totalScore;
+    }
+
     public int getColor() {
         return color;
     }
 
-    public BarScore getBarScore() {
-        return barScore;
+    public int getScore() {
+        return totalScore;
     }
 
+    public void setScore(int totalScore) {
+        this.totalScore = totalScore;
+    }
+
+    public void setColor(int color) {
+        this.color = color;
+    }
 }

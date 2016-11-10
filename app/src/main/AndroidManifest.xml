@@ -10,9 +10,7 @@
         android:supportsRtl="false"
         android:theme="@style/NoActionBar"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
-        <!-- This activity will be always in vertical orientation -->
-        <activity android:name=".MainActivity"
-            android:screenOrientation="portrait">
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

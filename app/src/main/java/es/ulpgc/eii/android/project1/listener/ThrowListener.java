@@ -3,7 +3,11 @@ package es.ulpgc.eii.android.project1.listener;
 import android.view.View;
 
 import es.ulpgc.eii.android.project1.modal.Game;
+import es.ulpgc.eii.android.project1.modal.Player;
+import es.ulpgc.eii.android.project1.ui.ButtonsToPlay;
+import es.ulpgc.eii.android.project1.ui.DieView;
 import es.ulpgc.eii.android.project1.ui.FinalAlertDialog;
+import es.ulpgc.eii.android.project1.ui.GameState;
 
 /**
  * Created by Marlovix
@@ -13,10 +17,16 @@ import es.ulpgc.eii.android.project1.ui.FinalAlertDialog;
 public class ThrowListener implements View.OnClickListener {
 
     private Game game;
+    private DieView dieView;
+    private GameState gameState;
+    private ButtonsToPlay buttons;
     private FinalAlertDialog alert;
 
-    public ThrowListener(Game game) {
+    public ThrowListener(Game game, DieView dieView, GameState gameState, ButtonsToPlay buttons) {
         this.game = game;
+        this.dieView = dieView;
+        this.gameState = gameState;
+        this.buttons = buttons;
         alert = new FinalAlertDialog();
     }
 
@@ -24,24 +34,28 @@ public class ThrowListener implements View.OnClickListener {
     public void onClick(View v) {
 
         // Condition for turn change (Value of die throwing = 1) //
-        int throwingValue = game.getDie().getValue();
+        int throwingValue = game.throwDie();
+        dieView.setImage(throwingValue);
+
         if (throwingValue == 1) {
             game.startTurn();
             return;
         }
 
         // The player can keep playing, so the collect button is shown //
-        game.getButtons().getButtonCollect().setVisibility(View.VISIBLE);
+        buttons.showCollectButton();
 
         // The player who is playing wins the game //
-        if (game.getPlayers().getPlayerToPlay().getBarScore().getScore() + throwingValue +
-                game.getPlayers().getPlayerToPlay().getAccumulatedScore() >= game.getMaxScore()) {
-
-            game.getPlayers().getPlayerToPlay().getBarScore().setScore(game.getMaxScore());
-            alert.show(game);
+        Player playerPlaying = game.getPlayers().getPlayer();
+        int accumulatedScore = playerPlaying.getAccumulatedScore();
+        int currentScore = playerPlaying.getScore();
+        int newScore = accumulatedScore + currentScore + throwingValue;
+        if (newScore >= game.getMaxScore()) { // Player wins //
+            // Update score view //
+            alert.show(v.getContext(), game);
         } else { // The score of the die throwing is accumulated //
-            game.getPlayers().getPlayerToPlay().addAccumulatedScore(throwingValue);
-            game.update();
+            playerPlaying.addAccumulatedScore(throwingValue);
+            gameState.updateAccumulatedView(playerPlaying.getAccumulatedScore());
         }
     }
 
