@@ -53,7 +53,7 @@ public class CollectListener implements View.OnClickListener {
         if(labelPlayer1.equals(namePlayer)){
             scoreBoard.updatePlayer1(newScore);
         }else if(labelPlayer2.equals(namePlayer)){
-            scoreBoard.updatePlayer1(newScore);
+            scoreBoard.updatePlayer2(newScore);
         }
 
         game.startTurn();

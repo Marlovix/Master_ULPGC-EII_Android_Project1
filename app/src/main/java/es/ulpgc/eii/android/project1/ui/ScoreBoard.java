@@ -18,6 +18,7 @@ public class ScoreBoard {
     public ScoreBoard(BarScore player1, BarScore player2) {
         this.player1 = player1;
         this.player2 = player2;
+        resetBarScores();
     }
 
     // Set the max score as maximum of progress in the ProgressBar widgets //
@@ -27,7 +28,7 @@ public class ScoreBoard {
     }
 
     // Set to zero the progress and the text of the players //
-    void resetBarScores() {
+    public void resetBarScores() {
         player1.setScore(0);
         player2.setScore(0);
     }

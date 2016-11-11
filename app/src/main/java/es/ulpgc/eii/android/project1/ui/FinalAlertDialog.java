@@ -18,7 +18,8 @@ import es.ulpgc.eii.android.project1.modal.Player;
 
 public class FinalAlertDialog {
 
-    public void show(Context context, Game game) {
+    public void show(Context context, Game game, ScoreBoard scoreBoard, DieView dieView,
+                     GameState gameState, ButtonsToPlay buttons) {
         Player winner = game.getPlayers().getPlayer();
 
         String title = context.getString(R.string.button_final);
@@ -30,7 +31,8 @@ public class FinalAlertDialog {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(title);
         builder.setMessage(message);
-        builder.setPositiveButton(positive, new PlayAgainListener(game));
+        builder.setPositiveButton(positive, new
+                PlayAgainListener(game, scoreBoard, dieView, gameState, buttons));
         builder.setNegativeButton(negative, new ExitListener(context));
         builder.setCancelable(false);
 

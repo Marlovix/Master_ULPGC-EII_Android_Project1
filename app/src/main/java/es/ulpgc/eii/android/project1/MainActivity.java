@@ -28,14 +28,29 @@ import es.ulpgc.eii.android.project1.ui.ScoreBoard;
 
 public class MainActivity extends FragmentActivity {
 
+    private Game game;
     private RetainedFragment dataFragment;
+
+    private static final String TAG_DATA_FRAGMENT = "dataFragment";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Data objects initialization //
+        // Find the retained fragment on activity restart //
+        FragmentManager manager = getSupportFragmentManager();
+        dataFragment = (RetainedFragment) manager.findFragmentByTag(TAG_DATA_FRAGMENT);
+
+        // Create the fragment and data the first time //
+        if(dataFragment == null){
+            // Add the fragment //
+            dataFragment = new RetainedFragment();
+            manager.beginTransaction().add(dataFragment, TAG_DATA_FRAGMENT).commit();
+            //dataFragment.setGame(game);
+        }
+
+        /* Data objects initialization */
         String namePlayer1 = String.format(getResources().getString(R.string.player), 1);
         String namePlayer2 = String.format(getResources().getString(R.string.player), 2);
 
@@ -46,7 +61,7 @@ public class MainActivity extends FragmentActivity {
         Player player2 = new Player(namePlayer2, colorPlayer2);
 
         // The game is created with two players when the application is launched //
-        Game game = new Game(player1, player2);
+        game = new Game(player1, player2);
 
         TextView textViewPlayer1 = (TextView) findViewById(R.id.textView_player1);
         TextView textViewScorePlayer1 = (TextView) findViewById(R.id.textView_player1_score);
@@ -89,25 +104,14 @@ public class MainActivity extends FragmentActivity {
         game.start(player1);
 
         // Listeners //
-        buttonThrow.setOnClickListener(new ThrowListener(game, dieView, gameState, buttons));
+        buttonThrow.setOnClickListener(
+                new ThrowListener(game, scoreBoard, dieView, gameState, buttons));
         buttonCollect.setOnClickListener(
                 new CollectListener(game, scoreBoard, dieView, gameState, buttons));
 
         // Listener //
         textViewStartTurn.setOnClickListener(
                 new StartTurnListener(buttons));
-
-        // Find the retained fragment on activity restart //
-        FragmentManager manager = getSupportFragmentManager();
-        dataFragment = (RetainedFragment) manager.findFragmentByTag("data");
-
-        // Create the fragment and data the first time //
-        if(dataFragment == null){
-            // Add the fragment //
-            //dataFragment = new RetainedFragment();
-            //manager.beginTransaction().add(dataFragment, "data").commit();
-            //dataFragment.setGame(game);
-        }
 
     }
 
@@ -116,6 +120,6 @@ public class MainActivity extends FragmentActivity {
         super.onDestroy();
 
         // Store the data in the fragment //
-        //dataFragment.setGame(game);
+        dataFragment.setGame(game);
     }
 }

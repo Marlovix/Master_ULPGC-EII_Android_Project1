@@ -13,8 +13,7 @@ public class Players extends ArrayList<Player> {
 
     private Player playerToPlay;
 
-    Players() {
-    }
+    Players() {}
 
     void setFirstPlayer(Player player) {
         playerToPlay = player;
@@ -28,6 +27,13 @@ public class Players extends ArrayList<Player> {
 
     public Player getPlayer() {
         return playerToPlay;
+    }
+
+    void resetScores(){
+        for (Player player : this){
+            player.resetAccumulatedScore();
+            player.setScore(0);
+        }
     }
 
 }

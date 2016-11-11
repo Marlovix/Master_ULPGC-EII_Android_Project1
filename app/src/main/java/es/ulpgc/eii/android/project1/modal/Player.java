@@ -1,7 +1,5 @@
 package es.ulpgc.eii.android.project1.modal;
 
-import es.ulpgc.eii.android.project1.ui.BarScore;
-
 /**
  * Created by Marlovix
  * TODO: Add a class header comment!
@@ -40,11 +38,6 @@ public class Player {
 
     public void addAccumulatedScore(int accumulatedScore) {
         this.accumulatedScore += accumulatedScore;
-    }
-
-    public int updateScore(int newScore){
-        totalScore = accumulatedScore + newScore;
-        return totalScore;
     }
 
     public int getColor() {

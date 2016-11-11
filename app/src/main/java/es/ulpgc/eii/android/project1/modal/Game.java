@@ -15,7 +15,7 @@ public class Game {
 
     public Game(Player... players) {
         // 100 points are necessary to win the game //
-        maxScore = 10;
+        maxScore = 20;
 
         die = new Die();
 
@@ -27,6 +27,7 @@ public class Game {
     // The game starts with the player who is set as parameter //
     public void start(Player firstPlayer) {
         this.players.setFirstPlayer(firstPlayer);
+        this.players.resetScores();
     }
 
     // When a turn is going to be started, the player is changed,

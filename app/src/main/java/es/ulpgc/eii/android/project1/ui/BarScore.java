@@ -30,10 +30,6 @@ public class BarScore {
         textViewNamePlayer.setText(name);
     }
 
-    public Integer getScore() {
-        return score;
-    }
-
     public void setScore(int score) {
         this.score = score;
         progressBar.setProgress(score);
