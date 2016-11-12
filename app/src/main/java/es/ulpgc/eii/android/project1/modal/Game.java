@@ -9,11 +9,16 @@ import java.util.Collections;
 
 public class Game {
 
+    public enum State {START,READY,GAME,ONE,WINNER}
+
+    private State state;
     private Players players;
     private Die die;
     private int maxScore;
 
     public Game(Player... players) {
+        state = State.START;
+
         // 100 points are necessary to win the game //
         maxScore = 20;
 
@@ -46,6 +51,26 @@ public class Game {
 
     public int getMaxScore() {
         return maxScore;
+    }
+
+    public State getState() {
+        return state;
+    }
+
+    public void setStateStart(){
+        state = State.START;
+    }
+    public void setStateReady(){
+        state = State.READY;
+    }
+    public void setStateGame(){
+        state = State.GAME;
+    }
+    public void setStateOne(){
+        state = State.ONE;
+    }
+    public void setStateWinner(){
+        state = State.WINNER;
     }
 
 }

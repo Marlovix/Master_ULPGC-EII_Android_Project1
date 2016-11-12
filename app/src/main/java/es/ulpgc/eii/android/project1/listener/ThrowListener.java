@@ -4,6 +4,7 @@ import android.view.View;
 
 import es.ulpgc.eii.android.project1.modal.Game;
 import es.ulpgc.eii.android.project1.modal.Player;
+import es.ulpgc.eii.android.project1.ui.BarScore;
 import es.ulpgc.eii.android.project1.ui.ButtonsToPlay;
 import es.ulpgc.eii.android.project1.ui.DieView;
 import es.ulpgc.eii.android.project1.ui.FinalAlertDialog;
@@ -54,11 +55,24 @@ public class ThrowListener implements View.OnClickListener {
 
         // The player who is playing wins the game //
         Player playerPlaying = game.getPlayers().getPlayer();
+        String namePlayer = playerPlaying.getName();
         int accumulatedScore = playerPlaying.getAccumulatedScore();
         int currentScore = playerPlaying.getScore();
         int newScore = accumulatedScore + currentScore + throwingValue;
         if (newScore >= game.getMaxScore()) { // Player wins //
             // Update score view //
+            BarScore barScorePlayer1 = scoreBoard.getBarScorePlayer1();
+            BarScore barScorePlayer2 = scoreBoard.getBarScorePlayer2();
+
+            String labelPlayer1 = barScorePlayer1.getNamePlayer();
+            String labelPlayer2 = barScorePlayer2.getNamePlayer();
+
+            if(labelPlayer1.equals(namePlayer)){
+                scoreBoard.updatePlayer1(newScore);
+            }else if(labelPlayer2.equals(namePlayer)){
+                scoreBoard.updatePlayer2(newScore);
+            }
+
             alert.show(v.getContext(), game, scoreBoard, dieView, gameState, buttons);
         } else { // The score of the die throwing is accumulated //
             playerPlaying.addAccumulatedScore(throwingValue);
