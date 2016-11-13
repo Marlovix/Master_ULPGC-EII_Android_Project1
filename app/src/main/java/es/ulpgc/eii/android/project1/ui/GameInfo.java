@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import es.ulpgc.eii.android.project1.R;
+import es.ulpgc.eii.android.project1.modal.Game;
 import es.ulpgc.eii.android.project1.modal.Player;
 
 /**
@@ -14,37 +15,72 @@ import es.ulpgc.eii.android.project1.modal.Player;
 
 // Class which contains the text reports about the state of the game, as the accumulated score,
 // the name of the player who is playing and the clickable text to start the turn with a color //
-public class GameState {
+public class GameInfo extends GameObject {
 
     private TextView textViewPlayerToPlay;
     private TextView textViewStartTurn;
     private TextView textViewAccumulated;
 
-    public GameState(TextView textViewAccumulated,
-                     TextView textViewPlayerToPlay, TextView textViewStartTurn) {
-        // UI widgets initialization //
+    public GameInfo(TextView textViewAccumulated,
+                    TextView textViewPlayerToPlay, TextView textViewStartTurn) {
         this.textViewAccumulated = textViewAccumulated;
         this.textViewPlayerToPlay = textViewPlayerToPlay;
         this.textViewStartTurn = textViewStartTurn;
     }
 
-    public void newTurn(Player player) {
+    private void setPlayerInfo(Player player) {
         Context context = textViewPlayerToPlay.getContext();
+        int accumulatedScore = player.getAccumulatedScore();
+        int colorText = player.getColor();
         String newPlayer = player.getName();
         String textNewTurn = String.format(context.getString(R.string.label_start_turn), newPlayer);
-        int colorText = player.getColor();
-        updateAccumulatedView(0);
+        updateAccumulatedView(accumulatedScore);
         textViewPlayerToPlay.setText(newPlayer);
         textViewStartTurn.setText(textNewTurn);
         textViewStartTurn.setTextColor(colorText);
-        textViewStartTurn.setVisibility(View.VISIBLE);
     }
 
     // The only element which needs a update is the accumulated score //
-    public void updateAccumulatedView(int accumulatedScore) {
+    private void updateAccumulatedView(int accumulatedScore) {
         Context context = textViewAccumulated.getContext();
         String textAccumulated =
                 String.format(context.getString(R.string.label_accumulated), accumulatedScore);
         textViewAccumulated.setText(textAccumulated);
     }
+
+    @Override
+    public void startGame(Game game) {
+        setInfo(game);
+        textViewStartTurn.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void readyToPlay(Game game) {
+        setInfo(game);
+        textViewStartTurn.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void gamePlay(Game game) {
+        setInfo(game);
+        textViewStartTurn.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void lostTurnByOne(Game game) {
+        setInfo(game);
+        textViewStartTurn.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void finishGame(Game game) {
+        setInfo(game);
+        textViewStartTurn.setVisibility(View.INVISIBLE);
+    }
+
+    private void setInfo(Game game) {
+        Player playerToStart = game.getTurnPlayer();
+        setPlayerInfo(playerToStart);
+    }
+
 }

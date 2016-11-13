@@ -3,13 +3,10 @@ package es.ulpgc.eii.android.project1.listener;
 import android.view.View;
 
 import es.ulpgc.eii.android.project1.modal.Game;
+import es.ulpgc.eii.android.project1.modal.GameState;
 import es.ulpgc.eii.android.project1.modal.Player;
-import es.ulpgc.eii.android.project1.ui.BarScore;
-import es.ulpgc.eii.android.project1.ui.ButtonsToPlay;
-import es.ulpgc.eii.android.project1.ui.DieView;
 import es.ulpgc.eii.android.project1.ui.FinalAlertDialog;
-import es.ulpgc.eii.android.project1.ui.GameState;
-import es.ulpgc.eii.android.project1.ui.ScoreBoard;
+import es.ulpgc.eii.android.project1.ui.GameObject;
 
 /**
  * Created by Marlovix
@@ -19,64 +16,51 @@ import es.ulpgc.eii.android.project1.ui.ScoreBoard;
 public class ThrowListener implements View.OnClickListener {
 
     private Game game;
-    private ScoreBoard scoreBoard;
-    private DieView dieView;
-    private GameState gameState;
-    private ButtonsToPlay buttons;
-    private FinalAlertDialog alert;
+    private GameObject[] gameObjects;
 
-    public ThrowListener(Game game, ScoreBoard scoreBoard, DieView dieView,
-                         GameState gameState, ButtonsToPlay buttons) {
+    public ThrowListener(Game game, GameObject[] gameObjects) {
         this.game = game;
-        this.scoreBoard = scoreBoard;
-        this.dieView = dieView;
-        this.gameState = gameState;
-        this.buttons = buttons;
-        alert = new FinalAlertDialog();
+        this.gameObjects = gameObjects;
     }
 
     @Override
     public void onClick(View v) {
-
         // Condition for turn change (Value of die throwing = 1) //
         int throwingValue = game.throwDie();
-        dieView.setImage(throwingValue);
 
         if (throwingValue == 1) {
-            game.startTurn();
-            Player newPlayer = game.getPlayers().getPlayer();
-            gameState.newTurn(newPlayer);
-            buttons.hideButtons();
-            return;
+            game.setStateOne();
+            game.changeTurn();
+        } else {
+            // The player who is playing wins the game //
+            Player playerPlaying = game.getTurnPlayer();
+            int accumulatedScore = playerPlaying.getAccumulatedScore();
+            int currentScore = playerPlaying.getScore();
+            int newScore = accumulatedScore + currentScore + throwingValue;
+            if (newScore >= game.getMaxScore()) { // Player wins //
+                game.setStateWinner();
+                playerPlaying.setScore(newScore);
+                FinalAlertDialog.show(v.getContext(), game, gameObjects);
+            } else { // The score of the die throwing is accumulated //
+                game.setStateGame();
+                playerPlaying.addAccumulatedScore(throwingValue);
+            }
         }
 
-        // The player can keep playing, so the collect button is shown //
-        buttons.showCollectButton();
+        updateViewByState(gameObjects, game.getGameState());
+    }
 
-        // The player who is playing wins the game //
-        Player playerPlaying = game.getPlayers().getPlayer();
-        String namePlayer = playerPlaying.getName();
-        int accumulatedScore = playerPlaying.getAccumulatedScore();
-        int currentScore = playerPlaying.getScore();
-        int newScore = accumulatedScore + currentScore + throwingValue;
-        if (newScore >= game.getMaxScore()) { // Player wins //
-            // Update score view //
-            BarScore barScorePlayer1 = scoreBoard.getBarScorePlayer1();
-            BarScore barScorePlayer2 = scoreBoard.getBarScorePlayer2();
-
-            String labelPlayer1 = barScorePlayer1.getNamePlayer();
-            String labelPlayer2 = barScorePlayer2.getNamePlayer();
-
-            if(labelPlayer1.equals(namePlayer)){
-                scoreBoard.updatePlayer1(newScore);
-            }else if(labelPlayer2.equals(namePlayer)){
-                scoreBoard.updatePlayer2(newScore);
-            }
-
-            alert.show(v.getContext(), game, scoreBoard, dieView, gameState, buttons);
-        } else { // The score of the die throwing is accumulated //
-            playerPlaying.addAccumulatedScore(throwingValue);
-            gameState.updateAccumulatedView(playerPlaying.getAccumulatedScore());
+    private void updateViewByState(GameObject[] gameObjects, GameState gameState) {
+        switch (gameState) {
+            case ONE:
+                for (GameObject gameObject : gameObjects) gameObject.lostTurnByOne(game);
+                break;
+            case WINNER:
+                for (GameObject gameObject : gameObjects) gameObject.finishGame(game);
+                break;
+            case GAME:
+                for (GameObject gameObject : gameObjects) gameObject.gamePlay(game);
+                break;
         }
     }
 

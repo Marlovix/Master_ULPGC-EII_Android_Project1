@@ -9,18 +9,18 @@ import java.util.Collections;
 
 public class Game {
 
-    public enum State {START,READY,GAME,ONE,WINNER}
-
-    private State state;
+    private GameState gameState;
     private Players players;
     private Die die;
     private int maxScore;
+    private int lastThrowing;
 
     public Game(Player... players) {
-        state = State.START;
+        gameState = GameState.START;
 
         // 100 points are necessary to win the game //
         maxScore = 20;
+        lastThrowing = 0;
 
         die = new Die();
 
@@ -29,20 +29,29 @@ public class Game {
         Collections.addAll(this.players, players);
     }
 
+    public int getLastThrowing() {
+        return lastThrowing;
+    }
+
     // The game starts with the player who is set as parameter //
     public void start(Player firstPlayer) {
         this.players.setFirstPlayer(firstPlayer);
         this.players.resetScores();
     }
 
+    public Player getTurnPlayer() {
+        return this.players.getPlayer();
+    }
+
     // When a turn is going to be started, the player is changed,
-    // the game state is updated and the buttons are hidden //
-    public void startTurn() {
+    // the game gameState is updated and the buttons are hidden //
+    public void changeTurn() {
         players.changePlayer();
     }
 
-    public int throwDie(){
-        return die.getValue();
+    public int throwDie() {
+        lastThrowing = die.getValue();
+        return lastThrowing;
     }
 
     public Players getPlayers() {
@@ -53,24 +62,28 @@ public class Game {
         return maxScore;
     }
 
-    public State getState() {
-        return state;
+    public GameState getGameState() {
+        return gameState;
     }
 
-    public void setStateStart(){
-        state = State.START;
+    public void setStateStart() {
+        gameState = GameState.START;
     }
-    public void setStateReady(){
-        state = State.READY;
+
+    public void setStateReady() {
+        gameState = GameState.READY;
     }
-    public void setStateGame(){
-        state = State.GAME;
+
+    public void setStateGame() {
+        gameState = GameState.GAME;
     }
-    public void setStateOne(){
-        state = State.ONE;
+
+    public void setStateOne() {
+        gameState = GameState.ONE;
     }
-    public void setStateWinner(){
-        state = State.WINNER;
+
+    public void setStateWinner() {
+        gameState = GameState.WINNER;
     }
 
 }

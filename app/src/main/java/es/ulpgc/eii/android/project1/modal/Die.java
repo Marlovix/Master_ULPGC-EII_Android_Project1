@@ -11,7 +11,7 @@ import es.ulpgc.eii.android.project1.R;
  */
 
 // Class which shows the correct image for the different results of the die throwing //
-public class Die {
+class Die {
 
     private int faces;
 
@@ -35,10 +35,10 @@ public class Die {
     }
 
     // It establishes the number of faces that the die has //
-    private void setNumberOfFaces(){
+    private void setNumberOfFaces() {
         Field[] fields = R.drawable.class.getFields();
         int numberOfFacesDrawables = 0;
-        for (Field field : fields){
+        for (Field field : fields) {
             // Take only those which name starts with "face" //
             if (field.getName().startsWith("face")) numberOfFacesDrawables++;
         }

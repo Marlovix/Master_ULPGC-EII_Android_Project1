@@ -1,10 +1,9 @@
 package es.ulpgc.eii.android.project1.listener;
 
 import android.view.View;
-import android.widget.Button;
 
-import es.ulpgc.eii.android.project1.ui.ButtonsToPlay;
-import es.ulpgc.eii.android.project1.ui.GameState;
+import es.ulpgc.eii.android.project1.modal.Game;
+import es.ulpgc.eii.android.project1.ui.GameObject;
 
 /**
  * Created by Marlovix
@@ -13,16 +12,18 @@ import es.ulpgc.eii.android.project1.ui.GameState;
 
 public class StartTurnListener implements View.OnClickListener {
 
-    private ButtonsToPlay buttons;
+    private Game game;
+    private GameObject[] gameObjects;
 
-    public StartTurnListener(ButtonsToPlay buttons) {
-        this.buttons = buttons;
+    public StartTurnListener(Game game, GameObject... gameObjects) {
+        this.game = game;
+        this.gameObjects = gameObjects;
     }
 
     // The text to start the turn disappears and enables the Throw Button //
     @Override
     public void onClick(View v) {
-        v.setVisibility(View.INVISIBLE);
-        buttons.showThrowButton();
+        game.setStateReady();
+        for (GameObject gameObject : gameObjects) gameObject.readyToPlay(game);
     }
 }

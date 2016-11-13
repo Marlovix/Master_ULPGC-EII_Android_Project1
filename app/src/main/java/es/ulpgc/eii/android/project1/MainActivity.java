@@ -14,11 +14,12 @@ import es.ulpgc.eii.android.project1.listener.StartTurnListener;
 import es.ulpgc.eii.android.project1.listener.ThrowListener;
 import es.ulpgc.eii.android.project1.modal.Game;
 import es.ulpgc.eii.android.project1.modal.Player;
-import es.ulpgc.eii.android.project1.modal.Players;
 import es.ulpgc.eii.android.project1.ui.BarScore;
 import es.ulpgc.eii.android.project1.ui.ButtonsToPlay;
 import es.ulpgc.eii.android.project1.ui.DieView;
-import es.ulpgc.eii.android.project1.ui.GameState;
+import es.ulpgc.eii.android.project1.ui.FinalAlertDialog;
+import es.ulpgc.eii.android.project1.ui.GameInfo;
+import es.ulpgc.eii.android.project1.ui.GameObject;
 import es.ulpgc.eii.android.project1.ui.ScoreBoard;
 
 /**
@@ -28,15 +29,9 @@ import es.ulpgc.eii.android.project1.ui.ScoreBoard;
 
 public class MainActivity extends FragmentActivity {
 
-    private Game game;
-    private ScoreBoard scoreBoard;
-    private DieView dieView;
-    private GameState gameState;
-    private ButtonsToPlay buttons;
-
-    private RetainedFragment dataFragment;
     private static final String TAG_DATA_FRAGMENT = MainActivity.class.getSimpleName();
-    private static boolean isDataLoaded;
+    private Game game;
+    private GameObject[] gameObjects;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +40,7 @@ public class MainActivity extends FragmentActivity {
 
         // Find the retained fragment on activity restart //
         FragmentManager manager = getSupportFragmentManager();
-        dataFragment = (RetainedFragment) manager.findFragmentByTag(TAG_DATA_FRAGMENT);
+        RetainedFragment dataFragment = (RetainedFragment) manager.findFragmentByTag(TAG_DATA_FRAGMENT);
 
         // Create the fragment and data the first time //
         if (dataFragment == null) {
@@ -65,11 +60,35 @@ public class MainActivity extends FragmentActivity {
 
             // The game is created with two players when the application is launched //
             game = new Game(player1, player2);
+            game.start(player1);
             dataFragment.setGame(game);
-        }else{
+        } else {
             game = dataFragment.getGame();
         }
 
+        initViews();
+
+        switch (game.getGameState()) {
+            case START:
+                startGame();
+                break;
+            case READY:
+                readyToPlay();
+                break;
+            case GAME:
+                gamePlay();
+                break;
+            case ONE:
+                lostTurnByOne();
+                break;
+            case WINNER:
+                finishGame();
+                FinalAlertDialog.show(this, game, gameObjects);
+                break;
+        }
+    }
+
+    private void initViews(){
         /* Views initialization */
         TextView textViewPlayer1 = (TextView) findViewById(R.id.textView_player1);
         TextView textViewScorePlayer1 = (TextView) findViewById(R.id.textView_player1_score);
@@ -93,37 +112,37 @@ public class MainActivity extends FragmentActivity {
         BarScore barScorePlayer2 =
                 new BarScore(textViewPlayer2, textViewScorePlayer2, progressBarPlayer2);
 
-        scoreBoard = new ScoreBoard(barScorePlayer1, barScorePlayer2);
-        dieView = new DieView(imageViewDie);
-        gameState = new GameState(textViewAccumulated, textViewPlayerToPlay, textViewStartTurn);
-        buttons = new ButtonsToPlay(buttonThrow, buttonCollect);
+        ScoreBoard scoreBoard = new ScoreBoard(barScorePlayer1, barScorePlayer2);
+        DieView dieView = new DieView(imageViewDie);
+        GameInfo gameInfo = new GameInfo(textViewAccumulated, textViewPlayerToPlay, textViewStartTurn);
+        ButtonsToPlay buttons = new ButtonsToPlay(buttonThrow, buttonCollect);
 
-        /* Start game */
-        Players players = game.getPlayers();
-        scoreBoard.setPlayer1(players.get(0).getName());
-        scoreBoard.setPlayer2(players.get(1).getName());
-        scoreBoard.setMax(game.getMaxScore());
-
-        if(savedInstanceState != null){
-
-        }else{
-
-
-            Player playerToStart = players.get(0);
-            gameState.newTurn(playerToStart);
-            gameState.updateAccumulatedView(0);
-
-            game.start(playerToStart);
-        }
+        gameObjects = new GameObject[]{scoreBoard, dieView, gameInfo, buttons};
 
         /* Listeners */
-        buttonThrow.setOnClickListener(
-                new ThrowListener(game, scoreBoard, dieView, gameState, buttons));
-        buttonCollect.setOnClickListener(
-                new CollectListener(game, scoreBoard, dieView, gameState, buttons));
-        textViewStartTurn.setOnClickListener(
-                new StartTurnListener(buttons));
+        buttonThrow.setOnClickListener(new ThrowListener(game, gameObjects));
+        buttonCollect.setOnClickListener(new CollectListener(game, gameObjects));
+        textViewStartTurn.setOnClickListener(new StartTurnListener(game, gameObjects));
+    }
 
+    private void startGame() {
+        for (GameObject gameObject : gameObjects) gameObject.startGame(game);
+    }
+
+    private void readyToPlay() {
+        for (GameObject gameObject : gameObjects) gameObject.readyToPlay(game);
+    }
+
+    private void gamePlay() {
+        for (GameObject gameObject : gameObjects) gameObject.gamePlay(game);
+    }
+
+    private void lostTurnByOne() {
+        for (GameObject gameObject : gameObjects) gameObject.lostTurnByOne(game);
+    }
+
+    private void finishGame() {
+        for (GameObject gameObject : gameObjects) gameObject.finishGame(game);
     }
 
 }

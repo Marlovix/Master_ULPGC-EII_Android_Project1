@@ -16,36 +16,23 @@ public class BarScore {
     private TextView textViewNamePlayer;
     private TextView textViewScore;
     private ProgressBar progressBar;
-    private int score;
 
     public BarScore(TextView textViewNamePlayer, TextView textViewScore, ProgressBar progressBar) {
-        score = 0;
         this.textViewNamePlayer = textViewNamePlayer;
         this.textViewScore = textViewScore;
         this.progressBar = progressBar;
-        this.textViewScore.setText(String.format(Locale.getDefault(), "%d", score));
     }
 
-    public void setNameBarScore(String name) {
+    void setNameBarScore(String name) {
         textViewNamePlayer.setText(name);
     }
 
-    public void setScore(int score) {
-        this.score = score;
+    void setScore(int score) {
         progressBar.setProgress(score);
         textViewScore.setText(String.format(Locale.getDefault(), "%d", score));
     }
 
-    public String getNamePlayer(){
-        return textViewNamePlayer.getText().toString();
-    }
-
-    public ProgressBar getProgressBar() {
-        return progressBar;
-    }
-
-    public void setMax(int max){
+    void setMax(int max) {
         progressBar.setMax(max);
     }
-
 }

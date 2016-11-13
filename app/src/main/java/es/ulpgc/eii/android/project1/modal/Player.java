@@ -51,8 +51,4 @@ public class Player {
     public void setScore(int totalScore) {
         this.totalScore = totalScore;
     }
-
-    public void setColor(int color) {
-        this.color = color;
-    }
 }
