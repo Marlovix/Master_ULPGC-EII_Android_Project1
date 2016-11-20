@@ -7,14 +7,13 @@ import es.ulpgc.eii.android.project1.modal.Game;
 
 /**
  * Created by Marlovix
- * TODO: Add a class header comment!
+ * Class which handle the buttons that are necessaries to play
  */
 
-// Class which contains the buttons that are necessaries to play //
 public class ButtonsToPlay extends GameObject {
 
-    private Button buttonThrow;
     private Button buttonCollect;
+    private Button buttonThrow;
 
     public ButtonsToPlay(Button buttonThrow, Button buttonCollect) {
         this.buttonThrow = buttonThrow;
@@ -22,15 +21,9 @@ public class ButtonsToPlay extends GameObject {
     }
 
     @Override
-    public void startGame(Game game) {
-        buttonCollect.setVisibility(View.INVISIBLE);
-        buttonThrow.setVisibility(View.INVISIBLE);
-    }
-
-    @Override
-    public void readyToPlay(Game game) {
-        buttonCollect.setVisibility(View.INVISIBLE);
+    public void finishGame(Game game) {
         buttonThrow.setVisibility(View.VISIBLE);
+        buttonCollect.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -46,8 +39,20 @@ public class ButtonsToPlay extends GameObject {
     }
 
     @Override
-    public void finishGame(Game game) {
+    public void readyToPlay(Game game) {
+        buttonCollect.setVisibility(View.INVISIBLE);
         buttonThrow.setVisibility(View.VISIBLE);
-        buttonCollect.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void startGame(Game game) {
+        buttonCollect.setVisibility(View.INVISIBLE);
+        buttonThrow.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void startTurn(Game game) {
+        buttonCollect.setVisibility(View.INVISIBLE);
+        buttonThrow.setVisibility(View.INVISIBLE);
     }
 }

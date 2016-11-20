@@ -1,12 +1,11 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
 
-    <style name="NoActionBar" tools:targetApi="11" parent="@android:style/Theme.Holo.Light">
-        <item tools:targetApi="11" name="android:windowActionBar">false</item>
+    <style name="app_theme" parent="android:Theme.Light">
         <item name="android:windowNoTitle">true</item>
     </style>
 
     <style name="game">
-        <item name="android:layout_margin">@dimen/margin_game</item>
+        <item name="android:padding">@dimen/padding_game</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:orientation">vertical</item>
@@ -43,7 +42,7 @@
         <item name="android:orientation">vertical</item>
     </style>
 
-    <style name="progress" tools:targetApi="11" parent="@android:style/Widget.Holo.ProgressBar.Horizontal">
+    <style name="progress" parent="android:Widget.ProgressBar.Horizontal">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
@@ -68,8 +67,8 @@
         <item name="android:layout_height">match_parent</item>
         <item name="android:gravity">center</item>
         <item name="android:textStyle">bold</item>
+        <item name="android:background">@android:color/white</item>
         <item name="android:textColor">@color/label_button</item>
-        <item name="android:background">@drawable/button</item>
     </style>
 
     <style name="button_content">

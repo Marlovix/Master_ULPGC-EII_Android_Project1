@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="label_button">#1B67B6</color>
-    <color name="background_button">#E0E0E0</color>
-    <color name="gradient_button">#BFBFBF</color>
-    <color name="background_pressed_button">#8D8D8D</color>
+    <color name="red">#FF0000</color>
+    <color name="blue">#0000FF</color>
 </resources>

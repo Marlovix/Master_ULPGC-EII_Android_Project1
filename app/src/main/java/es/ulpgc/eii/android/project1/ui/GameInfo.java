@@ -13,13 +13,11 @@ import es.ulpgc.eii.android.project1.modal.Player;
  * TODO: Add a class header comment!
  */
 
-// Class which contains the text reports about the state of the game, as the accumulated score,
-// the name of the player who is playing and the clickable text to start the turn with a color //
 public class GameInfo extends GameObject {
 
+    private TextView textViewAccumulated;
     private TextView textViewPlayerToPlay;
     private TextView textViewStartTurn;
-    private TextView textViewAccumulated;
 
     public GameInfo(TextView textViewAccumulated,
                     TextView textViewPlayerToPlay, TextView textViewStartTurn) {
@@ -28,59 +26,67 @@ public class GameInfo extends GameObject {
         this.textViewStartTurn = textViewStartTurn;
     }
 
-    private void setPlayerInfo(Player player) {
-        Context context = textViewPlayerToPlay.getContext();
-        int accumulatedScore = player.getAccumulatedScore();
-        int colorText = player.getColor();
-        String newPlayer = player.getName();
-        String textNewTurn = String.format(context.getString(R.string.label_start_turn), newPlayer);
-        updateAccumulatedView(accumulatedScore);
-        textViewPlayerToPlay.setText(newPlayer);
-        textViewStartTurn.setText(textNewTurn);
-        textViewStartTurn.setTextColor(colorText);
-    }
-
-    // The only element which needs a update is the accumulated score //
-    private void updateAccumulatedView(int accumulatedScore) {
-        Context context = textViewAccumulated.getContext();
-        String textAccumulated =
-                String.format(context.getString(R.string.label_accumulated), accumulatedScore);
-        textViewAccumulated.setText(textAccumulated);
-    }
-
     @Override
-    public void startGame(Game game) {
+    public void finishGame(Game game) {
         setInfo(game);
-        textViewStartTurn.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void readyToPlay(Game game) {
-        setInfo(game);
+        textViewPlayerToPlay.setVisibility(View.VISIBLE);
         textViewStartTurn.setVisibility(View.INVISIBLE);
     }
 
     @Override
     public void gamePlay(Game game) {
         setInfo(game);
+        textViewPlayerToPlay.setVisibility(View.VISIBLE);
         textViewStartTurn.setVisibility(View.INVISIBLE);
     }
 
     @Override
     public void lostTurnByOne(Game game) {
         setInfo(game);
+        textViewPlayerToPlay.setVisibility(View.VISIBLE);
         textViewStartTurn.setVisibility(View.VISIBLE);
     }
 
     @Override
-    public void finishGame(Game game) {
+    public void readyToPlay(Game game) {
         setInfo(game);
+        textViewPlayerToPlay.setVisibility(View.VISIBLE);
         textViewStartTurn.setVisibility(View.INVISIBLE);
     }
 
+    @Override
+    public void startGame(Game game) {
+        setInfo(game);
+        textViewPlayerToPlay.setVisibility(View.VISIBLE);
+        textViewStartTurn.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void startTurn(Game game) {
+        setInfo(game);
+        textViewPlayerToPlay.setVisibility(View.INVISIBLE);
+        textViewStartTurn.setVisibility(View.VISIBLE);
+    }
+
     private void setInfo(Game game) {
+        Context context = textViewPlayerToPlay.getContext();
         Player playerToStart = game.getTurnPlayer();
-        setPlayerInfo(playerToStart);
+        int accumulatedScore = game.getAccumulatedScore();
+        int colorText = playerToStart.getColor();
+        String newPlayer = playerToStart.getName();
+        String textNewTurn = String.format(context.getString(R.string.label_start_turn), newPlayer);
+
+        updateAccumulatedView(accumulatedScore);
+        textViewPlayerToPlay.setText(newPlayer);
+        textViewStartTurn.setText(textNewTurn);
+        textViewStartTurn.setTextColor(colorText);
+    }
+
+    private void updateAccumulatedView(int accumulatedScore) {
+        Context context = textViewAccumulated.getContext();
+        String textAccumulated =
+                String.format(context.getString(R.string.label_accumulated), accumulatedScore);
+        textViewAccumulated.setText(textAccumulated);
     }
 
 }

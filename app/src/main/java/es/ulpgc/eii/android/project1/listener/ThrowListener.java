@@ -5,6 +5,7 @@ import android.view.View;
 import es.ulpgc.eii.android.project1.modal.Game;
 import es.ulpgc.eii.android.project1.modal.GameState;
 import es.ulpgc.eii.android.project1.modal.Player;
+import es.ulpgc.eii.android.project1.tool.ViewTimer;
 import es.ulpgc.eii.android.project1.ui.FinalAlertDialog;
 import es.ulpgc.eii.android.project1.ui.GameObject;
 
@@ -15,36 +16,43 @@ import es.ulpgc.eii.android.project1.ui.GameObject;
 
 public class ThrowListener implements View.OnClickListener {
 
+    private FinalAlertDialog finalAlertDialog;
     private Game game;
     private GameObject[] gameObjects;
 
-    public ThrowListener(Game game, GameObject[] gameObjects) {
+    public ThrowListener(Game game, FinalAlertDialog finalAlertDialogs, GameObject[] gameObjects) {
         this.game = game;
         this.gameObjects = gameObjects;
+        this.finalAlertDialog = finalAlertDialogs;
     }
 
     @Override
     public void onClick(View v) {
-        // Condition for turn change (Value of die throwing = 1) //
+
+        ViewTimer.normalizeClick(v);
+
         int throwingValue = game.throwDie();
 
+        // Condition for turn change (Value of die throwing = 1) //
         if (throwingValue == 1) {
             game.setStateOne();
             game.changeTurn();
         } else {
-            // The player who is playing wins the game //
             Player playerPlaying = game.getTurnPlayer();
-            int accumulatedScore = playerPlaying.getAccumulatedScore();
+            int currentAccumulatedScore = game.getAccumulatedScore();
             int currentScore = playerPlaying.getScore();
-            int newScore = accumulatedScore + currentScore + throwingValue;
+            int newAccumulatedScore = currentAccumulatedScore + throwingValue;
+            int newScore = currentAccumulatedScore + currentScore + throwingValue;
+
             if (newScore >= game.getMaxScore()) { // Player wins //
                 game.setStateWinner();
                 playerPlaying.setScore(newScore);
-                FinalAlertDialog.show(v.getContext(), game, gameObjects);
+                finalAlertDialog.show();
             } else { // The score of the die throwing is accumulated //
                 game.setStateGame();
-                playerPlaying.addAccumulatedScore(throwingValue);
             }
+
+            game.setAccumulatedScore(newAccumulatedScore);
         }
 
         updateViewByState(gameObjects, game.getGameState());

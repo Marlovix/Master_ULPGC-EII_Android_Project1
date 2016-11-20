@@ -7,20 +7,23 @@ import java.util.Locale;
 
 /**
  * Created by Marlovix
- * TODO: Add a class header comment!
+ * Class which updates the view of the widgets related with the player score
  */
 
-// Class which updates the view of the widgets related with the player score //
 public class BarScore {
 
+    private ProgressBar progressBar;
     private TextView textViewNamePlayer;
     private TextView textViewScore;
-    private ProgressBar progressBar;
 
     public BarScore(TextView textViewNamePlayer, TextView textViewScore, ProgressBar progressBar) {
         this.textViewNamePlayer = textViewNamePlayer;
         this.textViewScore = textViewScore;
         this.progressBar = progressBar;
+    }
+
+    void setMax(int max) {
+        progressBar.setMax(max);
     }
 
     void setNameBarScore(String name) {
@@ -30,9 +33,5 @@ public class BarScore {
     void setScore(int score) {
         progressBar.setProgress(score);
         textViewScore.setText(String.format(Locale.getDefault(), "%d", score));
-    }
-
-    void setMax(int max) {
-        progressBar.setMax(max);
     }
 }

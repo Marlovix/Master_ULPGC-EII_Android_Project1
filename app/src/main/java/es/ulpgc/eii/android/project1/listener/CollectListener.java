@@ -4,6 +4,7 @@ import android.view.View;
 
 import es.ulpgc.eii.android.project1.modal.Game;
 import es.ulpgc.eii.android.project1.modal.Player;
+import es.ulpgc.eii.android.project1.tool.ViewTimer;
 import es.ulpgc.eii.android.project1.ui.GameObject;
 
 /**
@@ -21,21 +22,21 @@ public class CollectListener implements View.OnClickListener {
         this.gameObjects = gameObjects;
     }
 
-    // When the player collects the accumulated score the game changes the player to play //
     @Override
     public void onClick(View v) {
-        game.setStateStart();
+        ViewTimer.normalizeClick(v);
+
+        game.setStateTurn();
 
         Player playerPlaying = game.getTurnPlayer();
-        int accumulatedScore = playerPlaying.getAccumulatedScore();
+        int accumulatedScore = game.getAccumulatedScore();
         int currentScore = playerPlaying.getScore();
         int newScore = accumulatedScore + currentScore;
 
         playerPlaying.setScore(newScore);
-        playerPlaying.resetAccumulatedScore();
 
         game.changeTurn();
 
-        for (GameObject gameObject : gameObjects) gameObject.startGame(game);
+        for (GameObject gameObject : gameObjects) gameObject.startTurn(game);
     }
 }

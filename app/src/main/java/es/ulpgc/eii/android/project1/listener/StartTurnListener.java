@@ -3,6 +3,7 @@ package es.ulpgc.eii.android.project1.listener;
 import android.view.View;
 
 import es.ulpgc.eii.android.project1.modal.Game;
+import es.ulpgc.eii.android.project1.tool.ViewTimer;
 import es.ulpgc.eii.android.project1.ui.GameObject;
 
 /**
@@ -20,10 +21,12 @@ public class StartTurnListener implements View.OnClickListener {
         this.gameObjects = gameObjects;
     }
 
-    // The text to start the turn disappears and enables the Throw Button //
     @Override
     public void onClick(View v) {
+        ViewTimer.normalizeClick(v);
+
         game.setStateReady();
+        game.setAccumulatedScore(0);
         for (GameObject gameObject : gameObjects) gameObject.readyToPlay(game);
     }
 }

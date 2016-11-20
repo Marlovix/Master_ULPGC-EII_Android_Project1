@@ -18,6 +18,39 @@ public class DieView extends GameObject {
         this.imageViewDie = imageViewDie;
     }
 
+    @Override
+    public void finishGame(Game game) {
+        setImage(game);
+        imageViewDie.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void gamePlay(Game game) {
+        setImage(game);
+        imageViewDie.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void lostTurnByOne(Game game) {
+        setImage(game);
+        imageViewDie.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void readyToPlay(Game game) {
+        imageViewDie.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void startGame(Game game) {
+        imageViewDie.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void startTurn(Game game) {
+        imageViewDie.setVisibility(View.INVISIBLE);
+    }
+
     private void setImage(Game game) {
         int lastThrowing = game.getLastThrowing();
         int image = 0;
@@ -42,33 +75,5 @@ public class DieView extends GameObject {
                 break;
         }
         imageViewDie.setImageResource(image);
-    }
-
-    @Override
-    public void startGame(Game game) {
-        imageViewDie.setVisibility(View.INVISIBLE);
-    }
-
-    @Override
-    public void readyToPlay(Game game) {
-        imageViewDie.setVisibility(View.INVISIBLE);
-    }
-
-    @Override
-    public void gamePlay(Game game) {
-        setImage(game);
-        imageViewDie.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void lostTurnByOne(Game game) {
-        setImage(game);
-        imageViewDie.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void finishGame(Game game) {
-        setImage(game);
-        imageViewDie.setVisibility(View.VISIBLE);
     }
 }

@@ -17,7 +17,6 @@ public class ExitListener implements DialogInterface.OnClickListener {
         this.activity = (Activity) context;
     }
 
-    // The player closes the final dialog and the application after to get the victory //
     @Override
     public void onClick(DialogInterface dialog, int which) {
         dialog.dismiss();

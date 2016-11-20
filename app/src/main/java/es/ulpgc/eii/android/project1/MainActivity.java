@@ -1,9 +1,8 @@
 package es.ulpgc.eii.android.project1;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -29,7 +28,8 @@ import es.ulpgc.eii.android.project1.ui.ScoreBoard;
 
 public class MainActivity extends FragmentActivity {
 
-    private static final String TAG_DATA_FRAGMENT = MainActivity.class.getSimpleName();
+    static final String GAME_TAG = Game.class.getSimpleName();
+    private FinalAlertDialog finalAlertDialog;
     private Game game;
     private GameObject[] gameObjects;
 
@@ -38,22 +38,12 @@ public class MainActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Find the retained fragment on activity restart //
-        FragmentManager manager = getSupportFragmentManager();
-        RetainedFragment dataFragment = (RetainedFragment) manager.findFragmentByTag(TAG_DATA_FRAGMENT);
-
-        // Create the fragment and data the first time //
-        if (dataFragment == null) {
-            // Add the fragment //
-            dataFragment = new RetainedFragment();
-            manager.beginTransaction().add(dataFragment, TAG_DATA_FRAGMENT).commit();
-
-            /* Data objects initialization */
+        if (savedInstanceState == null) {
             String namePlayer1 = String.format(getResources().getString(R.string.player), 1);
             String namePlayer2 = String.format(getResources().getString(R.string.player), 2);
 
-            int colorPlayer1 = Color.parseColor("#0000FF"); // Color Blue
-            int colorPlayer2 = Color.parseColor("#FF0000"); // Color Red
+            int colorPlayer1 = ContextCompat.getColor(this, R.color.blue);
+            int colorPlayer2 = ContextCompat.getColor(this, R.color.red);
 
             Player player1 = new Player(namePlayer1, colorPlayer1);
             Player player2 = new Player(namePlayer2, colorPlayer2);
@@ -61,34 +51,14 @@ public class MainActivity extends FragmentActivity {
             // The game is created with two players when the application is launched //
             game = new Game(player1, player2);
             game.start(player1);
-            dataFragment.setGame(game);
-        } else {
-            game = dataFragment.getGame();
+
+            initViews();
+            updateState();
         }
 
-        initViews();
-
-        switch (game.getGameState()) {
-            case START:
-                startGame();
-                break;
-            case READY:
-                readyToPlay();
-                break;
-            case GAME:
-                gamePlay();
-                break;
-            case ONE:
-                lostTurnByOne();
-                break;
-            case WINNER:
-                finishGame();
-                FinalAlertDialog.show(this, game, gameObjects);
-                break;
-        }
     }
 
-    private void initViews(){
+    private void initViews() {
         /* Views initialization */
         TextView textViewPlayer1 = (TextView) findViewById(R.id.textView_player1);
         TextView textViewScorePlayer1 = (TextView) findViewById(R.id.textView_player1_score);
@@ -119,18 +89,53 @@ public class MainActivity extends FragmentActivity {
 
         gameObjects = new GameObject[]{scoreBoard, dieView, gameInfo, buttons};
 
+        finalAlertDialog = new FinalAlertDialog(this, game, gameObjects);
+
         /* Listeners */
-        buttonThrow.setOnClickListener(new ThrowListener(game, gameObjects));
+        buttonThrow.setOnClickListener(new ThrowListener(game, finalAlertDialog, gameObjects));
         buttonCollect.setOnClickListener(new CollectListener(game, gameObjects));
         textViewStartTurn.setOnClickListener(new StartTurnListener(game, gameObjects));
     }
 
-    private void startGame() {
-        for (GameObject gameObject : gameObjects) gameObject.startGame(game);
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        finalAlertDialog.dismiss();
     }
 
-    private void readyToPlay() {
-        for (GameObject gameObject : gameObjects) gameObject.readyToPlay(game);
+    // The system call this before Activity is destroyed //
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putParcelable(GAME_TAG, game);
+        super.onSaveInstanceState(outState);
+    }
+
+    private void updateState() {
+        switch (game.getGameState()) {
+            case GAME:
+                gamePlay();
+                break;
+            case ONE:
+                lostTurnByOne();
+                break;
+            case READY:
+                readyToPlay();
+                break;
+            case START:
+                startGame();
+                break;
+            case TURN:
+                startTurn();
+                break;
+            case WINNER:
+                finishGame();
+                break;
+        }
+    }
+
+    private void finishGame() {
+        for (GameObject gameObject : gameObjects) gameObject.finishGame(game);
+        finalAlertDialog.show();
     }
 
     private void gamePlay() {
@@ -141,8 +146,24 @@ public class MainActivity extends FragmentActivity {
         for (GameObject gameObject : gameObjects) gameObject.lostTurnByOne(game);
     }
 
-    private void finishGame() {
-        for (GameObject gameObject : gameObjects) gameObject.finishGame(game);
+    private void readyToPlay() {
+        for (GameObject gameObject : gameObjects) gameObject.readyToPlay(game);
+    }
+
+    private void startGame() {
+        for (GameObject gameObject : gameObjects) gameObject.startGame(game);
+    }
+
+    private void startTurn() {
+        for (GameObject gameObject : gameObjects) gameObject.startTurn(game);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        game = savedInstanceState.getParcelable(GAME_TAG);
+        initViews();
+        updateState();
     }
 
 }

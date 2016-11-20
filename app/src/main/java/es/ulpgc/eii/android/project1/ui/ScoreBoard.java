@@ -19,31 +19,8 @@ public class ScoreBoard extends GameObject {
         this.barScorePlayer2 = barScorePlayer2;
     }
 
-    // Set the max score as maximum of progress in the ProgressBar widgets //
-    private void setMax(int maxScore) {
-        barScorePlayer1.setMax(maxScore);
-        barScorePlayer2.setMax(maxScore);
-    }
-
-    private void renderScoreBoard(Game game) {
-        setNames(game);
-        showCurrentScores(game);
-        setMax(game.getMaxScore());
-    }
-
-    private void setNames(Game game) {
-        Players players = game.getPlayers();
-        barScorePlayer1.setNameBarScore(players.get(0).getName());
-        barScorePlayer2.setNameBarScore(players.get(1).getName());
-    }
-
     @Override
-    public void startGame(Game game) {
-        renderScoreBoard(game);
-    }
-
-    @Override
-    public void readyToPlay(Game game) {
+    public void finishGame(Game game) {
         renderScoreBoard(game);
     }
 
@@ -58,8 +35,36 @@ public class ScoreBoard extends GameObject {
     }
 
     @Override
-    public void finishGame(Game game) {
+    public void readyToPlay(Game game) {
         renderScoreBoard(game);
+    }
+
+    @Override
+    public void startGame(Game game) {
+        renderScoreBoard(game);
+    }
+
+    @Override
+    public void startTurn(Game game) {
+        renderScoreBoard(game);
+    }
+
+    private void renderScoreBoard(Game game) {
+        setNames(game);
+        showCurrentScores(game);
+        setMax(game.getMaxScore());
+    }
+
+    // Set the max score as maximum of progress in the ProgressBar widgets //
+    private void setMax(int maxScore) {
+        barScorePlayer1.setMax(maxScore);
+        barScorePlayer2.setMax(maxScore);
+    }
+
+    private void setNames(Game game) {
+        Players players = game.getPlayers();
+        barScorePlayer1.setNameBarScore(players.get(0).getName());
+        barScorePlayer2.setNameBarScore(players.get(1).getName());
     }
 
     private void showCurrentScores(Game game) {

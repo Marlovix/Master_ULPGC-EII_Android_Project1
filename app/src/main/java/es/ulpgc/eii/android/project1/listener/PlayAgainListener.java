@@ -3,7 +3,7 @@ package es.ulpgc.eii.android.project1.listener;
 import android.content.DialogInterface;
 
 import es.ulpgc.eii.android.project1.modal.Game;
-import es.ulpgc.eii.android.project1.modal.Player;
+import es.ulpgc.eii.android.project1.ui.FinalAlertDialog;
 import es.ulpgc.eii.android.project1.ui.GameObject;
 
 /**
@@ -13,26 +13,25 @@ import es.ulpgc.eii.android.project1.ui.GameObject;
 
 public class PlayAgainListener implements DialogInterface.OnClickListener {
 
+    private FinalAlertDialog finalDialog;
     private Game game;
     private GameObject[] gameObjects;
 
-    public PlayAgainListener(Game game, GameObject[] gameObjects) {
+    public PlayAgainListener(Game game, FinalAlertDialog finalDialog, GameObject[] gameObjects) {
+        this.finalDialog = finalDialog;
         this.game = game;
         this.gameObjects = gameObjects;
     }
 
-    // The player closes the final dialog, then the game starts a new game with the loser player //
     @Override
     public void onClick(DialogInterface dialog, int which) {
         game.setStateStart();
-
-        // Set new player to start game //
-        game.changeTurn();
-        Player newPlayer = game.getTurnPlayer();
-        game.start(newPlayer);
+        game.restart();
 
         for (GameObject gameObject : gameObjects) gameObject.startGame(game);
 
-        dialog.dismiss();
+        //  Necessary use finalDialog instead of dialog param to set the FinalAlertDialog.dialog
+        // attribute to null and use it on FinalAlertDialog.show() method //
+        finalDialog.dismiss();
     }
 }

@@ -17,28 +17,46 @@ import es.ulpgc.eii.android.project1.modal.Player;
  */
 
 public class FinalAlertDialog {
+    private Context context;
+    private AlertDialog dialog;
+    private Game game;
+    private GameObject[] gameObjects;
 
-    public static void show(Context context, Game game, GameObject... gameObjects) {
-        Player winner = game.getTurnPlayer();
+    public FinalAlertDialog(Context context, Game game, GameObject[] gameObjects) {
+        this.context = context;
+        this.game = game;
+        this.gameObjects = gameObjects;
+    }
 
-        String title = context.getString(R.string.button_final);
-        String message = String.format(context.getString(R.string.label_won), winner.getName());
+    public void dismiss() {
+        if (dialog != null) {
+            dialog.dismiss();
+            dialog = null;
+        }
+    }
 
-        String positive = context.getString(R.string.button_play_again);
-        String negative = context.getString(R.string.button_exit);
+    public void show() {
+        if (dialog == null) {
+            Player winner = game.getTurnPlayer();
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle(title);
-        builder.setMessage(message);
-        builder.setPositiveButton(positive, new PlayAgainListener(game, gameObjects));
-        builder.setNegativeButton(negative, new ExitListener(context));
-        builder.setCancelable(false);
+            String title = context.getString(R.string.button_final);
+            String message = String.format(context.getString(R.string.label_won), winner.getName());
 
-        // Center the message of the Alert Dialog //
-        AlertDialog dialog = builder.show();
-        TextView messageText = (TextView) dialog.findViewById(android.R.id.message);
-        messageText.setGravity(Gravity.CENTER);
-        dialog.show();
+            String positive = context.getString(R.string.button_play_again);
+            String negative = context.getString(R.string.button_exit);
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            builder.setTitle(title);
+            builder.setMessage(message);
+            builder.setPositiveButton(positive, new PlayAgainListener(game, this, gameObjects));
+            builder.setNegativeButton(negative, new ExitListener(context));
+            builder.setCancelable(false);
+
+            // Center the message of the Alert Dialog //
+            dialog = builder.show();
+            TextView messageText = (TextView) dialog.findViewById(android.R.id.message);
+            messageText.setGravity(Gravity.CENTER);
+        }
     }
 
 }
