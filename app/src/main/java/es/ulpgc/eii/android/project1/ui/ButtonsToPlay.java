@@ -10,7 +10,7 @@ import es.ulpgc.eii.android.project1.modal.Game;
  * Class which handle the buttons that are necessaries to play
  */
 
-public class ButtonsToPlay extends GameObject {
+public class ButtonsToPlay implements GameObject {
 
     private Button buttonCollect;
     private Button buttonThrow;

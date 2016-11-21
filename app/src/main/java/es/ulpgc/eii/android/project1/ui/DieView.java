@@ -11,7 +11,7 @@ import es.ulpgc.eii.android.project1.modal.Game;
  * TODO: Add a class header comment!
  */
 
-public class DieView extends GameObject {
+public class DieView implements GameObject {
     private ImageView imageViewDie;
 
     public DieView(ImageView imageViewDie) {

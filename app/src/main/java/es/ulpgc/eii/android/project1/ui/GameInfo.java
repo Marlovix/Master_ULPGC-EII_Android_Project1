@@ -13,7 +13,7 @@ import es.ulpgc.eii.android.project1.modal.Player;
  * TODO: Add a class header comment!
  */
 
-public class GameInfo extends GameObject {
+public class GameInfo implements GameObject {
 
     private TextView textViewAccumulated;
     private TextView textViewPlayerToPlay;

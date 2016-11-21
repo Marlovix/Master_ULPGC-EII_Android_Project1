@@ -9,7 +9,7 @@ import es.ulpgc.eii.android.project1.modal.Players;
  * TODO: Add a class header comment!
  */
 
-public class ScoreBoard extends GameObject {
+public class ScoreBoard implements GameObject {
 
     private BarScore barScorePlayer1;
     private BarScore barScorePlayer2;
