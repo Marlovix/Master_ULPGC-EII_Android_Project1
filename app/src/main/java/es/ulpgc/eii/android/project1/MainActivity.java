@@ -42,8 +42,8 @@ public class MainActivity extends FragmentActivity {
             String namePlayer1 = String.format(getResources().getString(R.string.player), 1);
             String namePlayer2 = String.format(getResources().getString(R.string.player), 2);
 
-            int colorPlayer1 = ContextCompat.getColor(this, R.color.blue);
-            int colorPlayer2 = ContextCompat.getColor(this, R.color.red);
+            int colorPlayer1 = ContextCompat.getColor(this, R.color.player1);
+            int colorPlayer2 = ContextCompat.getColor(this, R.color.player2);
 
             Player player1 = new Player(namePlayer1, colorPlayer1);
             Player player2 = new Player(namePlayer2, colorPlayer2);
@@ -62,16 +62,16 @@ public class MainActivity extends FragmentActivity {
         /* Views initialization */
         TextView textViewPlayer1 = (TextView) findViewById(R.id.textView_player1);
         TextView textViewScorePlayer1 = (TextView) findViewById(R.id.textView_player1_score);
-        ProgressBar progressBarPlayer1 = (ProgressBar) findViewById(R.id.progressBar_score_player1);
+        ProgressBar progressBarPlayer1 = (ProgressBar) findViewById(R.id.progressBar_player1);
 
         TextView textViewPlayer2 = (TextView) findViewById(R.id.textView_player2);
         TextView textViewScorePlayer2 = (TextView) findViewById(R.id.textView_player2_score);
-        ProgressBar progressBarPlayer2 = (ProgressBar) findViewById(R.id.progressBar_score_player2);
+        ProgressBar progressBarPlayer2 = (ProgressBar) findViewById(R.id.progressBar_player2);
 
         ImageView imageViewDie = (ImageView) findViewById(R.id.imageView_die);
 
-        TextView textViewAccumulated = (TextView) findViewById(R.id.textView_accumulated_score);
-        TextView textViewPlayerToPlay = (TextView) findViewById(R.id.textView_player_turn);
+        TextView textViewAccumulated = (TextView) findViewById(R.id.textView_accumulated);
+        TextView textViewPlayerTurn = (TextView) findViewById(R.id.textView_player_turn);
         TextView textViewStartTurn = (TextView) findViewById(R.id.textView_start_turn);
 
         Button buttonCollect = (Button) findViewById(R.id.button_collect);
@@ -84,7 +84,7 @@ public class MainActivity extends FragmentActivity {
 
         ScoreBoard scoreBoard = new ScoreBoard(barScorePlayer1, barScorePlayer2);
         DieView dieView = new DieView(imageViewDie);
-        GameInfo gameInfo = new GameInfo(textViewAccumulated, textViewPlayerToPlay, textViewStartTurn);
+        GameInfo gameInfo = new GameInfo(textViewAccumulated, textViewPlayerTurn, textViewStartTurn);
         ButtonsToPlay buttons = new ButtonsToPlay(buttonThrow, buttonCollect);
 
         gameObjects = new GameObject[]{scoreBoard, dieView, gameInfo, buttons};

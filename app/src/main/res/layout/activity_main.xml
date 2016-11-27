@@ -22,7 +22,7 @@
         </LinearLayout>
 
         <ProgressBar
-            android:id="@+id/progressBar_score_player1"
+            android:id="@+id/progressBar_player1"
             style="@style/progress" />
 
     </LinearLayout>
@@ -44,7 +44,7 @@
         </LinearLayout>
 
         <ProgressBar
-            android:id="@+id/progressBar_score_player2"
+            android:id="@+id/progressBar_player2"
             style="@style/progress" />
 
     </LinearLayout>
@@ -63,7 +63,7 @@
             style="@style/game_state" />
 
         <TextView
-            android:id="@+id/textView_accumulated_score"
+            android:id="@+id/textView_accumulated"
             style="@style/game_state"
             android:text="@string/label_accumulated" />
 
