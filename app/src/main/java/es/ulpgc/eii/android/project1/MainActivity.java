@@ -149,7 +149,7 @@ public class MainActivity extends FragmentActivity {
         }
     }
 
-    /* These methods only loop the gameObjects array and execute the methods of the interface */
+    // These methods only loop the gameObjects array and execute the methods of the interface //
     private void finishGame() {
         for (GameObject gameObject : gameObjects) gameObject.finishGame(game);
         gameAlertDialog.show("FINISH");
