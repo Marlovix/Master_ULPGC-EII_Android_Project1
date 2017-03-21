@@ -8,11 +8,6 @@ import es.ulpgc.eii.android.project1.R;
 import es.ulpgc.eii.android.project1.modal.Game;
 import es.ulpgc.eii.android.project1.modal.Player;
 
-/**
- * Created by Marlovix
- * TODO: Add a class header comment!
- */
-
 public class GameInfo implements GameObject {
 
     private TextView textViewAccumulated;
@@ -29,8 +24,8 @@ public class GameInfo implements GameObject {
     @Override
     public void finishGame(Game game) {
         setInfo(game);
-        textViewPlayerTurn.setVisibility(View.VISIBLE);
-        textViewStartTurn.setVisibility(View.INVISIBLE);
+        textViewPlayerTurn.setVisibility(View.INVISIBLE);
+        textViewStartTurn.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -68,20 +63,21 @@ public class GameInfo implements GameObject {
         textViewStartTurn.setVisibility(View.VISIBLE);
     }
 
+    // Set the player information on the screen //
     private void setInfo(Game game) {
         Context context = textViewPlayerTurn.getContext();
         Player playerToStart = game.getTurnPlayer();
-        int accumulatedScore = game.getAccumulatedScore();
-        int colorText = playerToStart.getColor();
         String newPlayer = playerToStart.getName();
         String textNewTurn = String.format(context.getString(R.string.label_start_turn), newPlayer);
+        int accumulatedScore = game.getAccumulatedScore();
+        int colorText = playerToStart.getColor();
 
         updateAccumulatedView(accumulatedScore);
         textViewPlayerTurn.setText(newPlayer);
         textViewStartTurn.setText(textNewTurn);
         textViewStartTurn.setTextColor(colorText);
     }
-
+    
     private void updateAccumulatedView(int accumulatedScore) {
         Context context = textViewAccumulated.getContext();
         String textAccumulated =

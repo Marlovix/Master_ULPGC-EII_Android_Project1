@@ -4,11 +4,6 @@ import es.ulpgc.eii.android.project1.modal.Game;
 import es.ulpgc.eii.android.project1.modal.Player;
 import es.ulpgc.eii.android.project1.modal.Players;
 
-/**
- * Created by Marlovix
- * TODO: Add a class header comment!
- */
-
 public class ScoreBoard implements GameObject {
 
     private BarScore barScorePlayer1;
@@ -52,13 +47,7 @@ public class ScoreBoard implements GameObject {
     private void renderScoreBoard(Game game) {
         setNames(game);
         showCurrentScores(game);
-        setMax(game.getMaxScore());
-    }
-
-    // Set the max score as maximum of progress in the ProgressBar widgets //
-    private void setMax(int maxScore) {
-        barScorePlayer1.setMax(maxScore);
-        barScorePlayer2.setMax(maxScore);
+        setMax(game);
     }
 
     private void setNames(Game game) {
@@ -73,6 +62,12 @@ public class ScoreBoard implements GameObject {
 
         barScorePlayer1.setScore(player1.getScore());
         barScorePlayer2.setScore(player2.getScore());
+    }
+
+    private void setMax(Game game) {
+        int max = game.getScoreToWin();
+        barScorePlayer1.setMax(max);
+        barScorePlayer2.setMax(max);
     }
 
 }

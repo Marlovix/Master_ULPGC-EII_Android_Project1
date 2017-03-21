@@ -16,41 +16,44 @@ import es.ulpgc.eii.android.project1.modal.Player;
 import es.ulpgc.eii.android.project1.ui.BarScore;
 import es.ulpgc.eii.android.project1.ui.ButtonsToPlay;
 import es.ulpgc.eii.android.project1.ui.DieView;
-import es.ulpgc.eii.android.project1.ui.FinalAlertDialog;
+import es.ulpgc.eii.android.project1.ui.GameAlertDialog;
 import es.ulpgc.eii.android.project1.ui.GameInfo;
 import es.ulpgc.eii.android.project1.ui.GameObject;
 import es.ulpgc.eii.android.project1.ui.ScoreBoard;
 
-/**
- * Created by Marlovix
- * TODO: Add a class header comment!
- */
-
 public class MainActivity extends FragmentActivity {
 
+    // Constants //
     static final String GAME_TAG = Game.class.getSimpleName();
-    private FinalAlertDialog finalAlertDialog;
+    static final String EXIT_ALERT_VISIBILITY = GameAlertDialog.class.getSimpleName();
+    static final int SCORE_TO_WIN = 20;
+
+    // Attributes //
+    private GameAlertDialog gameAlertDialog;
     private Game game;
     private GameObject[] gameObjects;
+    private boolean exitAlertVisible = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // If the app is restored onRestoreInstanceState() will recover the state of game //
         if (savedInstanceState == null) {
-            String namePlayer1 = String.format(getResources().getString(R.string.player), 1);
-            String namePlayer2 = String.format(getResources().getString(R.string.player), 2);
-
+            // Game variables //
             int colorPlayer1 = ContextCompat.getColor(this, R.color.player1);
             int colorPlayer2 = ContextCompat.getColor(this, R.color.player2);
-
+            String namePlayer1 = String.format(getResources().getString(R.string.player), 1);
+            String namePlayer2 = String.format(getResources().getString(R.string.player), 2);
             Player player1 = new Player(namePlayer1, colorPlayer1);
             Player player2 = new Player(namePlayer2, colorPlayer2);
 
             // The game is created with two players when the application is launched //
             game = new Game(player1, player2);
-            game.start(player1);
+
+            // It is necessary set player who is going to start the game and the score to win //
+            game.start(player1, SCORE_TO_WIN);
 
             initViews();
             updateState();
@@ -58,8 +61,8 @@ public class MainActivity extends FragmentActivity {
 
     }
 
+    // Activity views initialization //
     private void initViews() {
-        /* Views initialization */
         TextView textViewPlayer1 = (TextView) findViewById(R.id.textView_player1);
         TextView textViewScorePlayer1 = (TextView) findViewById(R.id.textView_player1_score);
         ProgressBar progressBarPlayer1 = (ProgressBar) findViewById(R.id.progressBar_player1);
@@ -77,39 +80,52 @@ public class MainActivity extends FragmentActivity {
         Button buttonCollect = (Button) findViewById(R.id.button_collect);
         Button buttonThrow = (Button) findViewById(R.id.button_throw);
 
+        // The views are stored in objects which handle its behaviour //
         BarScore barScorePlayer1 =
                 new BarScore(textViewPlayer1, textViewScorePlayer1, progressBarPlayer1);
         BarScore barScorePlayer2 =
                 new BarScore(textViewPlayer2, textViewScorePlayer2, progressBarPlayer2);
-
         ScoreBoard scoreBoard = new ScoreBoard(barScorePlayer1, barScorePlayer2);
         DieView dieView = new DieView(imageViewDie);
-        GameInfo gameInfo = new GameInfo(textViewAccumulated, textViewPlayerTurn, textViewStartTurn);
+        GameInfo gameInfo =
+                new GameInfo(textViewAccumulated, textViewPlayerTurn, textViewStartTurn);
         ButtonsToPlay buttons = new ButtonsToPlay(buttonThrow, buttonCollect);
 
+        // These objects with views are GameObjects, so they are stored in a global array //
         gameObjects = new GameObject[]{scoreBoard, dieView, gameInfo, buttons};
 
-        finalAlertDialog = new FinalAlertDialog(this, game, gameObjects);
+        // The AlertDialog to show the winner message or exit message -> onBackPressed() //
+        gameAlertDialog = new GameAlertDialog(this, game, gameObjects);
 
-        /* Listeners */
-        buttonThrow.setOnClickListener(new ThrowListener(game, finalAlertDialog, gameObjects));
+        // Listeners //
+        buttonThrow.setOnClickListener(new ThrowListener(game, gameAlertDialog, gameObjects));
         buttonCollect.setOnClickListener(new CollectListener(game, gameObjects));
         textViewStartTurn.setOnClickListener(new StartTurnListener(game, gameObjects));
     }
 
+    // The final call of system before the activity is destroyed, so the AlertDialog is closed //
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        finalAlertDialog.dismiss();
+        gameAlertDialog.dismiss();
     }
 
-    // The system call this before Activity is destroyed //
+    // The system calls this before Activity is destroyed and saves the game state //
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putParcelable(GAME_TAG, game);
+        outState.putBoolean(EXIT_ALERT_VISIBILITY, exitAlertVisible); // is EXIT AlertDialog shown?
         super.onSaveInstanceState(outState);
     }
 
+    // Ask if exit or start a new game on AlertDialog //
+    @Override
+    public void onBackPressed() {
+        gameAlertDialog.show("EXIT");
+        exitAlertVisible = true;
+    }
+
+    // Depending on the game state is executed a method //
     private void updateState() {
         switch (game.getGameState()) {
             case GAME:
@@ -127,15 +143,16 @@ public class MainActivity extends FragmentActivity {
             case TURN:
                 startTurn();
                 break;
-            case WINNER:
+            case FINISH:
                 finishGame();
                 break;
         }
     }
 
+    /* These methods only loop the gameObjects array and execute the methods of the interface */
     private void finishGame() {
         for (GameObject gameObject : gameObjects) gameObject.finishGame(game);
-        finalAlertDialog.show();
+        gameAlertDialog.show("FINISH");
     }
 
     private void gamePlay() {
@@ -158,12 +175,16 @@ public class MainActivity extends FragmentActivity {
         for (GameObject gameObject : gameObjects) gameObject.startTurn(game);
     }
 
+
+    // The game state is restored and set views according that state //
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         game = savedInstanceState.getParcelable(GAME_TAG);
+        exitAlertVisible = savedInstanceState.getBoolean(EXIT_ALERT_VISIBILITY);
         initViews();
         updateState();
+        if (exitAlertVisible) gameAlertDialog.show("EXIT");
     }
 
 }

@@ -6,11 +6,6 @@ import android.widget.ImageView;
 import es.ulpgc.eii.android.project1.R;
 import es.ulpgc.eii.android.project1.modal.Game;
 
-/**
- * Created by Marlovix
- * TODO: Add a class header comment!
- */
-
 public class DieView implements GameObject {
     private ImageView imageViewDie;
 
@@ -21,7 +16,7 @@ public class DieView implements GameObject {
     @Override
     public void finishGame(Game game) {
         setImage(game);
-        imageViewDie.setVisibility(View.VISIBLE);
+        imageViewDie.setVisibility(View.INVISIBLE);
     }
 
     @Override

@@ -6,11 +6,6 @@ import es.ulpgc.eii.android.project1.modal.Game;
 import es.ulpgc.eii.android.project1.tool.ViewTimer;
 import es.ulpgc.eii.android.project1.ui.GameObject;
 
-/**
- * Created by Marlovix
- * TODO: Add a class header comment!
- */
-
 public class StartTurnListener implements View.OnClickListener {
 
     private Game game;
@@ -25,8 +20,10 @@ public class StartTurnListener implements View.OnClickListener {
     public void onClick(View v) {
         ViewTimer.normalizeClick(v);
 
-        game.setStateReady();
-        game.setAccumulatedScore(0);
+        game.setStateReady(); // Update game state //
+        game.setAccumulatedScore(0); // Restart the accumulated score //
+
+        // Update views //
         for (GameObject gameObject : gameObjects) gameObject.readyToPlay(game);
     }
 }

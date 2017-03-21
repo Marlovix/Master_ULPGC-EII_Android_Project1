@@ -20,7 +20,7 @@
     </style>
 
     <style name="players">
-        <item name="android:textSize">@dimen/size_font_players</item>
+        <item name="android:textSize">@dimen/font_size_game</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@android:color/black</item>
         <item name="android:layout_width">0dp</item>
@@ -35,7 +35,7 @@
         <item name="android:orientation">horizontal</item>
     </style>
 
-    <style name="players_content">
+    <style name="players_container">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">0dp</item>
         <item name="android:layout_weight">0.15</item>
@@ -51,10 +51,11 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">center</item>
-        <item name="android:textSize">@dimen/size_font_game_state_and_buttons</item>
+        <item name="android:layout_margin">@dimen/margin_game</item>
+        <item name="android:textSize">@dimen/font_size_game</item>
     </style>
 
-    <style name="game_state_content">
+    <style name="game_info_container">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">0dp</item>
         <item name="android:layout_weight">0.3</item>
@@ -62,7 +63,7 @@
     </style>
 
     <style name="buttons" parent="@android:style/Widget.Button">
-        <item name="android:textSize">@dimen/size_font_game_state_and_buttons</item>
+        <item name="android:textSize">@dimen/font_size_game</item>
         <item name="android:layout_width">@dimen/width_button</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:gravity">center</item>
@@ -71,7 +72,7 @@
         <item name="android:textColor">@color/label_button</item>
     </style>
 
-    <style name="button_content">
+    <style name="buttons_container">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">0dp</item>
         <item name="android:layout_weight">0.1</item>

@@ -8,11 +8,6 @@ import java.util.Random;
 
 import es.ulpgc.eii.android.project1.R;
 
-/**
- * Created by Marlovix
- * TODO: Add a class header comment!
- */
-
 class Die implements Parcelable {
 
     public static final Parcelable.Creator<Die> CREATOR = new Parcelable.Creator<Die>() {
@@ -32,6 +27,10 @@ class Die implements Parcelable {
         setNumberOfFaces();
     }
 
+    private Die(Parcel in) {
+        this.faces = in.readInt();
+    }
+
     // It establishes the number of faces that the die has //
     private void setNumberOfFaces() {
         Field[] fields = R.drawable.class.getFields();
@@ -41,10 +40,6 @@ class Die implements Parcelable {
             if (field.getName().startsWith("face")) numberOfFacesDrawables++;
         }
         faces = numberOfFacesDrawables;
-    }
-
-    private Die(Parcel in) {
-        this.faces = in.readInt();
     }
 
     @Override

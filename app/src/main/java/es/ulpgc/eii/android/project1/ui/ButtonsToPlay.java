@@ -5,11 +5,6 @@ import android.widget.Button;
 
 import es.ulpgc.eii.android.project1.modal.Game;
 
-/**
- * Created by Marlovix
- * Class which handle the buttons that are necessaries to play
- */
-
 public class ButtonsToPlay implements GameObject {
 
     private Button buttonCollect;
@@ -22,8 +17,8 @@ public class ButtonsToPlay implements GameObject {
 
     @Override
     public void finishGame(Game game) {
-        buttonThrow.setVisibility(View.VISIBLE);
-        buttonCollect.setVisibility(View.VISIBLE);
+        buttonThrow.setVisibility(View.INVISIBLE);
+        buttonCollect.setVisibility(View.INVISIBLE);
     }
 
     @Override

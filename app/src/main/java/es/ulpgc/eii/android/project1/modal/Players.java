@@ -5,11 +5,7 @@ import android.os.Parcelable;
 
 import java.util.ArrayList;
 
-/**
- * Created by Marlovix
- * Class witch controls the group of players and returns the player who has to play
- */
-
+// Class witch controls the group of players and returns the player who has to play //
 public class Players extends ArrayList<Player> implements Parcelable {
 
     public static final Parcelable.Creator<Players> CREATOR = new Parcelable.Creator<Players>() {

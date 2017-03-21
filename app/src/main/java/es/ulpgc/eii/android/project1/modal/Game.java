@@ -5,11 +5,6 @@ import android.os.Parcelable;
 
 import java.util.Collections;
 
-/**
- * Created by Marlovix
- * TODO: Add a class header comment!
- */
-
 public class Game implements Parcelable {
 
     public static final Creator<Game> CREATOR = new Creator<Game>() {
@@ -32,8 +27,6 @@ public class Game implements Parcelable {
 
     public Game(Player... players) {
         gameState = GameState.START;
-
-        maxScore = 100; // 100 points are necessary to win the game //
         accumulatedScore = 0;
         lastThrowing = 0;
 
@@ -84,7 +77,7 @@ public class Game implements Parcelable {
         return lastThrowing;
     }
 
-    public int getMaxScore() {
+    public int getScoreToWin() {
         return maxScore;
     }
 
@@ -92,14 +85,12 @@ public class Game implements Parcelable {
         return players;
     }
 
-    public void restart() {
-        changeTurn();
+    public void restart(Player newPlayer) {
         setAccumulatedScore(0);
         for (Player player : players) player.setScore(0);
         lastThrowing = 0;
 
-        Player newPlayer = getTurnPlayer();
-        start(newPlayer);
+        start(newPlayer, maxScore);
     }
 
     public void changeTurn() {
@@ -110,9 +101,10 @@ public class Game implements Parcelable {
         return this.players.getPlayer();
     }
 
-    // The game starts with the player who is set as parameter //
-    public void start(Player firstPlayer) {
-        this.players.setFirstPlayer(firstPlayer);
+    // The game starts with the player who is set as parameter and set the score to win the game //
+    public void start(Player firstPlayer, int maxScore) {
+        this.maxScore = maxScore;
+        players.setFirstPlayer(firstPlayer);
     }
 
     public void setStateGame() {
@@ -136,7 +128,7 @@ public class Game implements Parcelable {
     }
 
     public void setStateWinner() {
-        gameState = GameState.WINNER;
+        gameState = GameState.FINISH;
     }
 
     public int throwDie() {

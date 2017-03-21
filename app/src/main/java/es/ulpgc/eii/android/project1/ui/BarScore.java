@@ -5,11 +5,6 @@ import android.widget.TextView;
 
 import java.util.Locale;
 
-/**
- * Created by Marlovix
- * Class which updates the view of the widgets related with the player score
- */
-
 public class BarScore {
 
     private ProgressBar progressBar;
@@ -22,10 +17,6 @@ public class BarScore {
         this.progressBar = progressBar;
     }
 
-    void setMax(int max) {
-        progressBar.setMax(max);
-    }
-
     void setNameBarScore(String name) {
         textViewNamePlayer.setText(name);
     }
@@ -33,5 +24,9 @@ public class BarScore {
     void setScore(int score) {
         progressBar.setProgress(score);
         textViewScore.setText(String.format(Locale.getDefault(), "%d", score));
+    }
+
+    void setMax(int max) {
+        progressBar.setMax(max);
     }
 }

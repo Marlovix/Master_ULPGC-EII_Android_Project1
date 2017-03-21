@@ -5,7 +5,7 @@
     style="@style/game"
     tools:context=".MainActivity">
 
-    <LinearLayout style="@style/players_content">
+    <LinearLayout style="@style/players_container">
 
         <LinearLayout style="@style/players_text">
 
@@ -27,7 +27,7 @@
 
     </LinearLayout>
 
-    <LinearLayout style="@style/players_content">
+    <LinearLayout style="@style/players_container">
 
         <LinearLayout style="@style/players_text">
 
@@ -55,7 +55,7 @@
         android:contentDescription="@string/description_die_image" />
 
     <LinearLayout
-        style="@style/game_state_content"
+        style="@style/game_info_container"
         android:gravity="center">
 
         <TextView
@@ -70,11 +70,12 @@
         <TextView
             android:id="@+id/textView_start_turn"
             style="@style/game_state"
-            android:text="@string/label_start_turn" />
+            android:text="@string/label_start_turn"
+            android:textStyle="bold" />
 
     </LinearLayout>
 
-    <android.support.v7.widget.GridLayout style="@style/button_content">
+    <android.support.v7.widget.GridLayout style="@style/buttons_container">
 
         <Button
             android:id="@+id/button_throw"

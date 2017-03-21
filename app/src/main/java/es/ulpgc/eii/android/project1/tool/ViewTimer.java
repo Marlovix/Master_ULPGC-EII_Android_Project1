@@ -6,11 +6,7 @@ import android.view.View;
 import java.util.Timer;
 import java.util.TimerTask;
 
-/**
- * Created by Marlovix
- * TODO: Add a class header comment!
- */
-
+// This class blocks the view (Button, TextView) for a time to avoid a fast click //
 public class ViewTimer {
 
     public static void normalizeClick(View view) {

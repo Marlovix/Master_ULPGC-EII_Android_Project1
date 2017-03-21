@@ -3,11 +3,6 @@ package es.ulpgc.eii.android.project1.modal;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-/**
- * Created by Marlovix
- * Class with all information which is necessary for a player
- */
-
 public class Player implements Parcelable {
 
     public static final Parcelable.Creator<Player> CREATOR = new Parcelable.Creator<Player>() {

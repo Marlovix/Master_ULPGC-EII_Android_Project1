@@ -11,18 +11,13 @@ import es.ulpgc.eii.android.project1.listener.PlayAgainListener;
 import es.ulpgc.eii.android.project1.modal.Game;
 import es.ulpgc.eii.android.project1.modal.Player;
 
-/**
- * Created by Marlovix
- * TODO: Add a class header comment!
- */
-
-public class FinalAlertDialog {
+public class GameAlertDialog {
     private Context context;
     private AlertDialog dialog;
     private Game game;
     private GameObject[] gameObjects;
 
-    public FinalAlertDialog(Context context, Game game, GameObject[] gameObjects) {
+    public GameAlertDialog(Context context, Game game, GameObject[] gameObjects) {
         this.context = context;
         this.game = game;
         this.gameObjects = gameObjects;
@@ -35,27 +30,39 @@ public class FinalAlertDialog {
         }
     }
 
-    public void show() {
+    // Depending on param it shown the FINISH AlertDialog or the EXIT AlertDialog //
+    public void show(String typeAlert) {
         if (dialog == null) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(context);
             Player winner = game.getTurnPlayer();
 
             String title = context.getString(R.string.button_final);
-            String message = String.format(context.getString(R.string.label_won), winner.getName());
-
-            String positive = context.getString(R.string.button_play_again);
+            String message = "";
+            String positive = "";
+            switch (typeAlert) {
+                case "EXIT":
+                    message = context.getString(R.string.label_exit_question);
+                    positive = context.getString(R.string.start_new_game);
+                    break;
+                case "FINISH":
+                    message = String.format(context.getString(R.string.label_won), winner.getName());
+                    positive = context.getString(R.string.button_play_again);
+                    break;
+            }
             String negative = context.getString(R.string.button_exit);
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(context);
             builder.setTitle(title);
             builder.setMessage(message);
             builder.setPositiveButton(positive, new PlayAgainListener(game, this, gameObjects));
             builder.setNegativeButton(negative, new ExitListener(context));
-            builder.setCancelable(false);
+            builder.setCancelable(false); // Avoid close the alert with back button of the device //
 
-            // Center the message of the Alert Dialog //
             dialog = builder.show();
-            TextView messageText = (TextView) dialog.findViewById(android.R.id.message);
-            messageText.setGravity(Gravity.CENTER);
+
+            if (typeAlert.equals("FINISH")) {
+                TextView textViewMessage = (TextView) dialog.findViewById(android.R.id.message);
+                textViewMessage.setGravity(Gravity.CENTER);
+            }
         }
     }
 

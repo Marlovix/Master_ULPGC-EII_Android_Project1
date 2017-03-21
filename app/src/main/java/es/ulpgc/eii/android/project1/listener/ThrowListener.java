@@ -6,24 +6,19 @@ import es.ulpgc.eii.android.project1.modal.Game;
 import es.ulpgc.eii.android.project1.modal.GameState;
 import es.ulpgc.eii.android.project1.modal.Player;
 import es.ulpgc.eii.android.project1.tool.ViewTimer;
-import es.ulpgc.eii.android.project1.ui.FinalAlertDialog;
+import es.ulpgc.eii.android.project1.ui.GameAlertDialog;
 import es.ulpgc.eii.android.project1.ui.GameObject;
-
-/**
- * Created by Marlovix
- * TODO: Add a class header comment!
- */
 
 public class ThrowListener implements View.OnClickListener {
 
-    private FinalAlertDialog finalAlertDialog;
+    private GameAlertDialog gameAlertDialog;
     private Game game;
     private GameObject[] gameObjects;
 
-    public ThrowListener(Game game, FinalAlertDialog finalAlertDialogs, GameObject[] gameObjects) {
+    public ThrowListener(Game game, GameAlertDialog gameAlertDialogs, GameObject[] gameObjects) {
         this.game = game;
         this.gameObjects = gameObjects;
-        this.finalAlertDialog = finalAlertDialogs;
+        this.gameAlertDialog = gameAlertDialogs;
     }
 
     @Override
@@ -31,11 +26,11 @@ public class ThrowListener implements View.OnClickListener {
 
         ViewTimer.normalizeClick(v);
 
-        int throwingValue = game.throwDie();
+        int throwingValue = game.throwDie(); // Random number between 1 and 6 //
 
         // Condition for turn change (Value of die throwing = 1) //
         if (throwingValue == 1) {
-            game.setStateOne();
+            game.setStateOne(); // Update game state //
             game.changeTurn();
         } else {
             Player playerPlaying = game.getTurnPlayer();
@@ -44,17 +39,19 @@ public class ThrowListener implements View.OnClickListener {
             int newAccumulatedScore = currentAccumulatedScore + throwingValue;
             int newScore = currentAccumulatedScore + currentScore + throwingValue;
 
-            if (newScore >= game.getMaxScore()) { // Player wins //
-                game.setStateWinner();
+            if (newScore >= game.getScoreToWin()) { // Player wins //
+                game.setStateWinner(); // Update game state //
                 playerPlaying.setScore(newScore);
-                finalAlertDialog.show();
+                gameAlertDialog.show("FINISH");
+                game.changeTurn();
             } else { // The score of the die throwing is accumulated //
-                game.setStateGame();
+                game.setStateGame(); // Update game state //
             }
 
-            game.setAccumulatedScore(newAccumulatedScore);
+            game.setAccumulatedScore(newAccumulatedScore); // Accumulate score //
         }
 
+        // Update views //
         updateViewByState(gameObjects, game.getGameState());
     }
 
@@ -63,7 +60,7 @@ public class ThrowListener implements View.OnClickListener {
             case ONE:
                 for (GameObject gameObject : gameObjects) gameObject.lostTurnByOne(game);
                 break;
-            case WINNER:
+            case FINISH:
                 for (GameObject gameObject : gameObjects) gameObject.finishGame(game);
                 break;
             case GAME:
