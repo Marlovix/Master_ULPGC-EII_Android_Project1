@@ -29,9 +29,9 @@ public class MainActivity extends FragmentActivity {
     static final int SCORE_TO_WIN = 20;
 
     // Attributes //
-    private GameAlertDialog gameAlertDialog;
     private Game game;
     private GameObject[] gameObjects;
+    private GameAlertDialog gameAlertDialog;
     private boolean exitAlertVisible = false;
 
     @Override
