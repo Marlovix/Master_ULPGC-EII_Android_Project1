@@ -61,6 +61,39 @@ public class MainActivity extends FragmentActivity {
 
     }
 
+    // The final call of system before the activity is destroyed, so the AlertDialog is closed //
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        gameAlertDialog.dismiss();
+    }
+
+    // The system calls this before Activity is destroyed and saves the game state //
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putParcelable(GAME_TAG, game);
+        outState.putBoolean(EXIT_ALERT_VISIBILITY, exitAlertVisible); // is EXIT AlertDialog shown?
+        super.onSaveInstanceState(outState);
+    }
+
+    // The game state is restored and set views according that state //
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        game = savedInstanceState.getParcelable(GAME_TAG);
+        exitAlertVisible = savedInstanceState.getBoolean(EXIT_ALERT_VISIBILITY);
+        initViews();
+        updateState();
+        if (exitAlertVisible) gameAlertDialog.show("EXIT");
+    }
+
+    // Ask if exit or start a new game on AlertDialog //
+    @Override
+    public void onBackPressed() {
+        gameAlertDialog.show("EXIT");
+        exitAlertVisible = true;
+    }
+
     // Activity views initialization //
     private void initViews() {
         TextView textViewPlayer1 = (TextView) findViewById(R.id.textView_player1);
@@ -101,28 +134,6 @@ public class MainActivity extends FragmentActivity {
         buttonThrow.setOnClickListener(new ThrowListener(game, gameAlertDialog, gameObjects));
         buttonCollect.setOnClickListener(new CollectListener(game, gameObjects));
         textViewStartTurn.setOnClickListener(new StartTurnListener(game, gameObjects));
-    }
-
-    // The final call of system before the activity is destroyed, so the AlertDialog is closed //
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        gameAlertDialog.dismiss();
-    }
-
-    // The system calls this before Activity is destroyed and saves the game state //
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        outState.putParcelable(GAME_TAG, game);
-        outState.putBoolean(EXIT_ALERT_VISIBILITY, exitAlertVisible); // is EXIT AlertDialog shown?
-        super.onSaveInstanceState(outState);
-    }
-
-    // Ask if exit or start a new game on AlertDialog //
-    @Override
-    public void onBackPressed() {
-        gameAlertDialog.show("EXIT");
-        exitAlertVisible = true;
     }
 
     // Depending on the game state is executed a method //
@@ -173,18 +184,6 @@ public class MainActivity extends FragmentActivity {
 
     private void startTurn() {
         for (GameObject gameObject : gameObjects) gameObject.startTurn(game);
-    }
-
-
-    // The game state is restored and set views according that state //
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        game = savedInstanceState.getParcelable(GAME_TAG);
-        exitAlertVisible = savedInstanceState.getBoolean(EXIT_ALERT_VISIBILITY);
-        initViews();
-        updateState();
-        if (exitAlertVisible) gameAlertDialog.show("EXIT");
     }
 
 }
